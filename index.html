@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hortora — Tend your knowledge</title>
+  <meta name="description" content="Hard-won technical knowledge, structured for AI. Governed. Federated. Growing.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --parchment: #F4EFE4;
+      --parchment-dark: #EDE5D4;
+      --ink: #1C2B1C;
+      --ink-light: #2D4A2D;
+      --forest: #3A6040;
+      --sage: #7A9E7E;
+      --sage-light: #C8DCCA;
+      --gold: #8B6914;
+      --gold-light: #C4A24A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: 'Lora', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle paper texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: rgba(244, 239, 228, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--sage-light);
+    }
+
+    .nav-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--forest);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--forest); }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+    }
+
+    .hero-illustration {
+      width: 280px;
+      height: 280px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1.2s ease 0.2s forwards;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.5s forwards;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 1.75rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.7s forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--forest);
+    }
+
+    .hero-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
+    }
+
+    .hero-desc {
+      max-width: 52ch;
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.1s forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.3s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.75rem;
+      font-family: 'Lora', serif;
+      font-size: 0.9rem;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: all 0.25s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-primary {
+      background: var(--forest);
+      color: var(--parchment);
+      border: 1px solid var(--forest);
+    }
+
+    .btn-primary:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--forest);
+      border: 1px solid var(--sage);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--forest);
+      background: var(--sage-light);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin: 0 auto;
+      max-width: 600px;
+      padding: 2rem;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--sage-light);
+    }
+
+    .divider-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--sage);
+    }
+
+    /* ── What it is ── */
+    .what {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 3rem;
+    }
+
+    .pillar {
+      border-top: 2px solid var(--sage-light);
+      padding-top: 1.5rem;
+    }
+
+    .pillar-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--sage-light);
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .pillar h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--forest);
+      margin-bottom: 0.75rem;
+    }
+
+    .pillar p {
+      font-size: 0.92rem;
+      color: var(--ink-light);
+      line-height: 1.85;
+    }
+
+    /* ── The idea ── */
+    .idea {
+      background: var(--parchment-dark);
+      border-top: 1px solid var(--sage-light);
+      border-bottom: 1px solid var(--sage-light);
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .idea-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.4;
+    }
+
+    .idea-quote em {
+      color: var(--forest);
+      font-style: normal;
+    }
+
+    .idea-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--sage);
+    }
+
+    /* ── Status ── */
+    .status {
+      padding: 5rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .status-card {
+      background: white;
+      border: 1px solid var(--sage-light);
+      padding: 1.5rem;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: block;
+    }
+
+    .status-card:hover {
+      border-color: var(--sage);
+      box-shadow: 0 4px 20px rgba(58, 96, 64, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .status-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 0.5rem;
+    }
+
+    .status-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      color: var(--forest);
+      margin-bottom: 0.5rem;
+    }
+
+    .status-card-desc {
+      font-size: 0.8rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      margin-top: 0.75rem;
+    }
+
+    .badge-active { background: #E8F4E8; color: var(--forest); }
+    .badge-soon   { background: #F4EBD4; color: var(--gold); }
+    .badge-early  { background: #EAF0EA; color: var(--sage); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--sage-light);
+      padding: 2.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--sage);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links a:hover { color: var(--forest); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes growStem {
+      from { stroke-dashoffset: 400; }
+      to   { stroke-dashoffset: 0; }
+    }
+
+    @keyframes bloomLeaf {
+      from { opacity: 0; transform-origin: center; transform: scale(0) rotate(-10deg); }
+      to   { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    .stem-path {
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      animation: growStem 2s ease 0.3s forwards;
+    }
+
+    .leaf { opacity: 0; }
+    .leaf:nth-child(1) { animation: bloomLeaf 0.6s ease 0.9s forwards; }
+    .leaf:nth-child(2) { animation: bloomLeaf 0.6s ease 1.1s forwards; }
+    .leaf:nth-child(3) { animation: bloomLeaf 0.6s ease 1.3s forwards; }
+    .leaf:nth-child(4) { animation: bloomLeaf 0.6s ease 1.5s forwards; }
+    .leaf:nth-child(5) { animation: bloomLeaf 0.6s ease 1.7s forwards; }
+    .node { opacity: 0; animation: bloomLeaf 0.4s ease 1.9s forwards; }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.25rem; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-mark" href="/">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="#what">About</a></li>
+      <li><a href="#repos">Repos</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+
+    <!-- Botanical illustration -->
+    <svg class="hero-illustration" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main stem -->
+      <path class="stem-path" d="M140 260 C140 220 138 180 142 140 C146 100 138 70 140 40"
+        stroke="#3A6040" stroke-width="1.5" stroke-linecap="round"/>
+
+      <!-- Branch stems -->
+      <path class="stem-path" d="M141 190 C141 190 105 172 88 158" stroke="#3A6040" stroke-width="1" stroke-linecap="round" style="animation-delay:0.6s"/>
+      <path class="stem-path" d="M141 155 C141 155 175 138 192 122" stroke="#3A6040" stroke-width="1" stroke-linecap="round" style="animation-delay:0.8s"/>
+      <path class="stem-path" d="M141 120 C141 120 110 105 94 90" stroke="#3A6040" stroke-width="1" stroke-linecap="round" style="animation-delay:1.0s"/>
+      <path class="stem-path" d="M141 88 C141 88 168 75 180 60" stroke="#3A6040" stroke-width="1" stroke-linecap="round" style="animation-delay:1.1s"/>
+
+      <!-- Leaves -->
+      <g class="leaf">
+        <ellipse cx="74" cy="152" rx="22" ry="11" fill="#C8DCCA" stroke="#7A9E7E" stroke-width="0.8"
+          transform="rotate(-25 74 152)"/>
+        <path d="M88 156 C80 154 74 152 70 148" stroke="#3A6040" stroke-width="0.5" stroke-linecap="round"/>
+      </g>
+      <g class="leaf">
+        <ellipse cx="200" cy="116" rx="22" ry="11" fill="#C8DCCA" stroke="#7A9E7E" stroke-width="0.8"
+          transform="rotate(20 200 116)"/>
+        <path d="M186 118 C193 117 200 116 204 112" stroke="#3A6040" stroke-width="0.5" stroke-linecap="round"/>
+      </g>
+      <g class="leaf">
+        <ellipse cx="80" cy="84" rx="20" ry="10" fill="#C8DCCA" stroke="#7A9E7E" stroke-width="0.8"
+          transform="rotate(-30 80 84)"/>
+        <path d="M95 88 C87 86 80 84 77 80" stroke="#3A6040" stroke-width="0.5" stroke-linecap="round"/>
+      </g>
+      <g class="leaf">
+        <ellipse cx="188" cy="54" rx="20" ry="10" fill="#C8DCCA" stroke="#7A9E7E" stroke-width="0.8"
+          transform="rotate(15 188 54)"/>
+        <path d="M174 58 C181 57 188 54 192 51" stroke="#3A6040" stroke-width="0.5" stroke-linecap="round"/>
+      </g>
+      <!-- Small top leaf -->
+      <g class="leaf">
+        <ellipse cx="140" cy="32" rx="12" ry="6" fill="#7A9E7E" stroke="#3A6040" stroke-width="0.8"/>
+      </g>
+
+      <!-- Knowledge nodes -->
+      <g class="node">
+        <circle cx="88" cy="158" r="4" fill="#3A6040"/>
+        <circle cx="88" cy="158" r="7" fill="none" stroke="#3A6040" stroke-width="0.5" opacity="0.4"/>
+      </g>
+      <g class="node" style="animation-delay:2.0s">
+        <circle cx="192" cy="122" r="4" fill="#3A6040"/>
+        <circle cx="192" cy="122" r="7" fill="none" stroke="#3A6040" stroke-width="0.5" opacity="0.4"/>
+      </g>
+      <g class="node" style="animation-delay:2.1s">
+        <circle cx="94" cy="90" r="3.5" fill="#7A9E7E"/>
+        <circle cx="94" cy="90" r="6" fill="none" stroke="#7A9E7E" stroke-width="0.5" opacity="0.4"/>
+      </g>
+      <g class="node" style="animation-delay:2.2s">
+        <circle cx="180" cy="60" r="3.5" fill="#7A9E7E"/>
+        <circle cx="180" cy="60" r="6" fill="none" stroke="#7A9E7E" stroke-width="0.5" opacity="0.4"/>
+      </g>
+
+      <!-- Ground line -->
+      <line x1="100" y1="262" x2="180" y2="262" stroke="#C8DCCA" stroke-width="1" stroke-linecap="round"
+        opacity="0.6" style="animation: fadeUp 1s ease 0.2s forwards; opacity: 0;"/>
+
+      <!-- Decorative dots -->
+      <circle cx="60" cy="200" r="2" fill="#C8DCCA" opacity="0.5"/>
+      <circle cx="220" cy="170" r="1.5" fill="#C8DCCA" opacity="0.5"/>
+      <circle cx="50" cy="120" r="1.5" fill="#C8DCCA" opacity="0.4"/>
+      <circle cx="230" cy="220" r="2" fill="#C8DCCA" opacity="0.4"/>
+    </svg>
+
+    <p class="hero-eyebrow">Knowledge · Governed · Federated</p>
+
+    <h1>Hort<em>ora</em></h1>
+
+    <p class="hero-tagline">A garden you tend. An oracle you consult.</p>
+
+    <p class="hero-desc">
+      Hard-won technical knowledge, structured for AI retrieval.
+      Not documentation. Not Q&A. A governed collection of gotchas,
+      techniques, and undocumented behaviours — captured once, found when needed.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/Hortora" target="_blank">
+        View on GitHub
+      </a>
+      <a class="btn btn-secondary" href="#what">
+        Learn more
+      </a>
+    </div>
+
+  </section>
+
+  <div class="divider"><span class="divider-mark">⁂</span></div>
+
+  <!-- ── What it is ── -->
+  <section class="what" id="what">
+    <p class="section-label">What Hortora is</p>
+    <div class="pillars">
+
+      <div class="pillar">
+        <div class="pillar-num">01</div>
+        <h3>Structured for AI</h3>
+        <p>Entries are plain markdown with structured fields — symptom, root cause, fix, why non-obvious. Claude finds the right entry in three tool calls, under 1,500 tokens, regardless of garden size.</p>
+      </div>
+
+      <div class="pillar">
+        <div class="pillar-num">02</div>
+        <h3>Governed</h3>
+        <p>Submissions queue separately from the live garden. A merge step deduplicates at three levels. Every entry earns its place. The editorial bar is what makes it worth consulting.</p>
+      </div>
+
+      <div class="pillar">
+        <div class="pillar-num">03</div>
+        <h3>Federated</h3>
+        <p>Canonical gardens set the standard. Child gardens enrich them with local context. Peer gardens share across domains. Each garden remains sovereign — no centralisation required.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Pull quote ── -->
+  <section class="idea">
+    <p class="idea-quote">
+      "A Claude session would go in circles on something solved in a different session.
+      Each new context window was a blank slate.
+      The fix was obvious: <em>capture the hard-won stuff before context closes.</em>"
+    </p>
+    <p class="idea-source">— The Rootstock: How the Hortora Garden was Germinated</p>
+  </section>
+
+  <!-- ── Status / repos ── -->
+  <section class="status" id="repos">
+    <p class="section-label">Repositories</p>
+
+    <div class="status-grid">
+
+      <a class="status-card" href="https://github.com/Hortora/garden" target="_blank">
+        <div class="status-card-label">hortora /</div>
+        <div class="status-card-name">garden</div>
+        <p class="status-card-desc">The root canonical garden. 78 entries across 12 domains. v2 migration in progress.</p>
+        <span class="badge badge-active">active</span>
+      </a>
+
+      <a class="status-card" href="https://github.com/Hortora/spec" target="_blank">
+        <div class="status-card-label">hortora /</div>
+        <div class="status-card-name">spec</div>
+        <p class="status-card-desc">The open protocol specification — federation rules, entry format, governance, and the design diary.</p>
+        <span class="badge badge-active">active</span>
+      </a>
+
+      <a class="status-card" href="https://github.com/Hortora/soredium" target="_blank">
+        <div class="status-card-label">hortora /</div>
+        <div class="status-card-name">soredium</div>
+        <p class="status-card-desc">The starter kit — validators, CI, MCP server, Obsidian plugin, and Claude skill. Coming soon.</p>
+        <span class="badge badge-soon">coming soon</span>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="divider"><span class="divider-mark">⁂</span></div>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank">spec</a></li>
+      <li><a href="https://github.com/Hortora/garden" target="_blank">garden</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
