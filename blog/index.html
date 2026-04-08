@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Diary — Hortora</title>
+  <meta name="description" content="The development diary of Hortora — decisions, pivots, and discoveries as they happen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .blog-header {
+      padding: 10rem 2rem 4rem;
+      text-align: center;
+      border-bottom: 1px solid var(--sage-light);
+    }
+
+    .blog-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      animation: none;
+      opacity: 1;
+    }
+
+    .blog-header p {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      color: var(--sage);
+      font-size: 1rem;
+    }
+
+    .entries {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .entry-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 2.5rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--parchment-dark);
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.2s;
+    }
+
+    .entry-item:hover { opacity: 0.75; }
+    .entry-item:first-child { border-top: 1px solid var(--parchment-dark); }
+
+    .entry-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--sage);
+      padding-top: 0.25rem;
+      line-height: 1.6;
+    }
+
+    .entry-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--sage-light);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .entry-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--forest);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .entry-excerpt {
+      font-size: 0.9rem;
+      color: var(--ink-light);
+      line-height: 1.75;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-mark" href="/">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="/#what">About</a></li>
+      <li><a href="/blog/" class="active">Diary</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <header class="blog-header">
+    <p class="section-label" style="margin-bottom:1.25rem;">Development diary</p>
+    <h1>The Diary</h1>
+    <p>Decisions, pivots, and discoveries — written as they happen.</p>
+  </header>
+
+  <main class="entries">
+
+    <a class="entry-item" href="2026-04-07-the-session.html">
+      <div class="entry-date">
+        <div class="entry-num">02</div>
+        2026-04-07
+      </div>
+      <div>
+        <div class="entry-title">The Session: One Fix, One Afternoon, One Project</div>
+        <p class="entry-excerpt">I came in to fix retrieval. We fixed it in an hour. Then we didn't stop.</p>
+      </div>
+    </a>
+
+    <a class="entry-item" href="2026-04-07-the-rootstock.html">
+      <div class="entry-date">
+        <div class="entry-num">01</div>
+        2026-04-07
+      </div>
+      <div>
+        <div class="entry-title">The Rootstock: How the Hortora Garden was Germinated</div>
+        <p class="entry-excerpt">I kept losing hours. Not to bad code or wrong decisions — to rediscovery.</p>
+      </div>
+    </a>
+
+  </main>
+
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank">spec</a></li>
+      <li><a href="https://github.com/Hortora/garden" target="_blank">garden</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

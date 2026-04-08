@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Rootstock — Hortora</title>
+  <meta name="description" content="How the Hortora Garden was Germinated — the origin story.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-header {
+      padding: 10rem 2rem 4rem;
+      max-width: 720px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--sage-light);
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .post-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--sage);
+    }
+
+    .post-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      border: 1px solid var(--gold-light);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    .post-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--ink);
+      animation: none;
+      opacity: 1;
+    }
+
+    .post-body {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .post-body p {
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      line-height: 1.85;
+    }
+
+    .post-body h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 500;
+      color: var(--forest);
+      margin: 3rem 0 1rem;
+    }
+
+    .post-body em { font-style: italic; color: var(--forest); }
+
+    .post-body img {
+      display: block;
+      max-width: 100%;
+      margin: 2.5rem auto;
+      border-radius: 3px;
+    }
+
+    .post-nav {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid var(--sage-light);
+    }
+
+    .post-nav a {
+      font-family: 'Lora', serif;
+      font-size: 0.85rem;
+      color: var(--forest);
+      text-decoration: none;
+    }
+
+    .post-nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-mark" href="/">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="/#what">About</a></li>
+      <li><a href="/blog/" class="active">Diary</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <header class="post-header">
+    <div class="post-meta">
+      <span class="post-date">2026-04-07</span>
+      <span class="post-num">entry 01</span>
+    </div>
+    <h1>The Rootstock: How the Hortora Garden was Germinated</h1>
+  </header>
+
+  <article class="post-body">
+
+    <p>I kept losing hours.</p>
+
+    <p>Not to bad code or wrong decisions — to rediscovery. A Claude session would go in circles on something I'd solved in a different session. Each new context window was a blank slate. What Claude learned in one session didn't survive to the next.</p>
+
+    <img src="hortora-blog1-img1-the-loop.png" alt="Each new session. Same problem. Every time.">
+
+    <p>The fix seemed obvious: capture the hard-won stuff before context closes, make it findable next time.</p>
+
+    <h2>The garden skill</h2>
+
+    <p>I built a capture skill for Claude Code. Five categories: gotchas (bugs whose symptoms mislead about root cause), techniques (non-obvious approaches that worked), undocumented behaviour, workarounds, and patterns worth naming. The first version wrote entries directly — Claude would note something worth capturing and write it into a domain file on the spot.</p>
+
+    <p>That was too loose. Claude wrote the same thing twice without knowing. Domain files grew into unstructured dumps. The editorial bar was effectively zero.</p>
+
+    <p>So I split the workflow. Submissions go into a pending queue; a separate merge step integrates them, deduplicates at three levels — exact match, semantic similarity, and structural equivalence — and decides whether an entry is genuinely novel. The submitter doesn't touch the garden directly. The merger does, with more context and deliberate checks.</p>
+
+    <img src="hortora-blog1-img3-workflow.png" alt="The split workflow — submissions, deduplication, governed garden">
+
+    <p>The quality improved noticeably.</p>
+
+    <h2>78 entries</h2>
+
+    <p>I ran the garden across all my active Claude projects. Entries accumulated. By 78, the pattern was clear: the knowledge held up. Claude could retrieve the right entry in three tool calls. When it did, it didn't repeat the mistake.</p>
+
+    <img src="hortora-blog1-img2-the-garden.png" alt="The garden growing — 78 entries across domains">
+
+    <p>At 78, retrieval started showing strain. And I could see where this was going — if this was going to work for my team, and eventually for the broader Quarkus community, it needed proper architecture before the debt made it painful.</p>
+
+    <h2>A name</h2>
+
+    <p>Before the design session I realised this needed a name. Several good candidates were taken. Cairn was an active AI coding agent. Mycelium was a live orchestrator in exactly the same space. Grok suggested Sylvara as its top pick — Claude ran independent searches and found sylvara.ai is a live AI agency. Grok didn't know.</p>
+
+    <p>Hortora came from <em>hortus</em>, Latin for garden, with an ending that hints at oracle. A garden you tend, an oracle you consult.</p>
+
+    <p>That felt right. We bought the domains, created the org, and started the design session.</p>
+
+    <img src="hortora-blog1-img4-vision.png" alt="The vision — personal, team, community">
+
+  </article>
+
+  <nav class="post-nav">
+    <a href="index.html">← All entries</a>
+    <a href="2026-04-07-the-session.html">Next: The Session →</a>
+  </nav>
+
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank">spec</a></li>
+      <li><a href="https://github.com/Hortora/garden" target="_blank">garden</a></li>
+    </ul>
+  </footer>
+</body>
+</html>
