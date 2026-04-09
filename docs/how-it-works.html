@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works — Hortora</title>
+  <meta name="description" content="The garden model, entry lifecycle, and the local-first design of Hortora.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav aria-label="Site">
+    <a class="nav-mark" href="../index.html">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#what">About</a></li>
+      <li><a href="../index.html#repos">Repos</a></li>
+      <li><a href="getting-started.html" class="active">Docs</a></li>
+      <li><a href="../blog/index.html">Diary</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <div class="docs-layout">
+
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-label">Documentation</div>
+      <nav aria-label="Documentation">
+        <a href="getting-started.html">Getting Started</a>
+        <a href="how-it-works.html" class="active">How It Works</a>
+        <a href="skills-reference.html">Skills Reference</a>
+        <a href="design-spec.html">Design Spec</a>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+
+      <h1>How It Works</h1>
+      <p class="lead">The garden model, entry lifecycle, and why Hortora is local-first.</p>
+
+      <h2>The garden model</h2>
+      <p>A Hortora garden is a machine-wide library of hard-won technical knowledge stored at <code>~/claude/knowledge-garden/</code>. Every Claude Code session on your machine can read from it and contribute to it.</p>
+      <p>Entries come in three kinds:</p>
+      <ul>
+        <li><strong>Gotchas</strong> — bugs that silently fail, behaviours that contradict documentation, workarounds that took hours to find</li>
+        <li><strong>Techniques</strong> — non-obvious approaches a skilled developer wouldn't naturally reach for, but would immediately value</li>
+        <li><strong>Undocumented</strong> — behaviours, options, or features that exist and work but aren't written down anywhere</li>
+      </ul>
+      <p>Each entry targets a specific technology and describes exactly one thing. The editorial bar is intentionally high — that's what makes the garden worth consulting.</p>
+
+      <h2>Entry lifecycle</h2>
+      <p>Entries move through a governed pipeline from raw capture to live garden:</p>
+      <ol>
+        <li><strong>Capture</strong> — during a session, forage queues a submission file in <code>~/claude/knowledge-garden/submissions/</code></li>
+        <li><strong>Merge</strong> — in a dedicated maintenance session, harvest MERGE assigns a GE-ID and integrates the submission into the live garden</li>
+        <li><strong>Deduplicate</strong> — harvest DEDUPE finds overlapping entries and resolves them, keeping the garden clean</li>
+      </ol>
+      <p>The separation between capture (lightweight, session-time) and merge (thorough, maintenance-time) is intentional. It keeps forage fast and keeps the live garden authoritative.</p>
+
+      <h2>GE-IDs</h2>
+      <p>Every merged entry gets a stable identifier — <code>GE-0001</code>, <code>GE-0042</code>, and so on. IDs are assigned sequentially at merge time and never reused. They let Claude reference specific entries across sessions and make deduplication tractable.</p>
+
+      <h2>Local-first</h2>
+      <p>The garden is plain files on your filesystem. No server, no account, no network required after installing the skills. Any Claude Code session that can read <code>~/claude/knowledge-garden/</code> can use the garden.</p>
+      <p>Federation — sharing gardens across machines and teams via GitHub — is planned for a future phase. The local garden you build now will migrate cleanly.</p>
+
+      <div class="docs-footer">
+        <a href="getting-started.html" class="docs-prev">Getting Started</a>
+        <a href="skills-reference.html" class="docs-next">Skills Reference</a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank" rel="noopener noreferrer">spec</a></li>
+      <li><a href="https://github.com/Hortora/soredium" target="_blank" rel="noopener noreferrer">soredium</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
