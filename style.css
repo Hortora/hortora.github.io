@@ -246,7 +246,7 @@ footer {
 }
 
 .code-block .comment { color: var(--sage); }
-.code-block .prompt   { color: #c8dcca; user-select: none; }
+.code-block .prompt   { color: var(--sage-light); user-select: none; }
 
 .callout {
   border-left: 3px solid var(--sage);
