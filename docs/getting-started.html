@@ -12,14 +12,14 @@
 </head>
 <body>
 
-  <nav>
+  <nav aria-label="Site">
     <a class="nav-mark" href="../index.html">Hortora</a>
     <ul class="nav-links">
       <li><a href="../index.html#what">About</a></li>
       <li><a href="../index.html#repos">Repos</a></li>
       <li><a href="getting-started.html" class="active">Docs</a></li>
       <li><a href="../blog/index.html">Diary</a></li>
-      <li><a href="https://github.com/Hortora" target="_blank">GitHub</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">GitHub</a></li>
     </ul>
   </nav>
 
@@ -27,7 +27,7 @@
 
     <aside class="docs-sidebar">
       <div class="docs-sidebar-label">Documentation</div>
-      <nav>
+      <nav aria-label="Documentation">
         <a href="getting-started.html" class="active">Getting Started</a>
         <a href="how-it-works.html">How It Works</a>
         <a href="skills-reference.html">Skills Reference</a>
@@ -41,7 +41,7 @@
       <p class="lead">Install the Hortora garden skills and capture your first entry.</p>
 
       <h2>Prerequisites</h2>
-      <p>Hortora garden skills run inside <a href="https://claude.ai/code" target="_blank">Claude Code</a> — Anthropic's CLI for Claude. You'll need:</p>
+      <p>Hortora garden skills run inside <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a> — Anthropic's CLI for Claude. You'll need:</p>
       <ul>
         <li>Claude Code installed and authenticated</li>
         <li>Python 3.8 or later</li>
@@ -54,6 +54,7 @@
         <span class="comment"># Download the skill manager</span><br>
         <span class="prompt">$ </span>curl -fsSL https://raw.githubusercontent.com/Hortora/soredium/main/scripts/claude-skill -o claude-skill
       </div>
+      <p>The downloaded file is a Python script — invoke it with <code>python3 claude-skill</code> (no chmod needed).</p>
 
       <h2>Install forage and harvest</h2>
       <p><strong>forage</strong> handles session-time operations (capturing and searching). <strong>harvest</strong> handles maintenance (merging submissions and deduplication).</p>
@@ -68,10 +69,10 @@
       <h2>Capture your first entry</h2>
       <p>During your next Claude Code session, when something non-obvious surfaces — a bug that took an hour to find, a technique worth remembering — Claude will proactively offer to capture it. You can also trigger it directly at any time:</p>
       <div class="code-block">
-        <span class="comment"># In any Claude Code session</span><br>
-        <span class="prompt">&gt; </span>/forage CAPTURE
+        <span class="comment"># In any Claude Code session — invoke forage</span><br>
+        <span class="prompt">&gt; </span>/forage
       </div>
-      <p>Claude will ask for the entry details: what technology, what type (gotcha, technique, or undocumented behaviour), and a description. The entry queues as a submission until you run harvest.</p>
+      <p>Once invoked, tell Claude what you want to capture — say "CAPTURE this" or describe the entry. Claude will ask for the technology, type (gotcha, technique, or undocumented behaviour), and a description. The entry queues as a submission until you run harvest.</p>
 
       <div class="docs-footer">
         <span></span>
@@ -84,9 +85,9 @@
   <footer>
     <span class="footer-mark">Hortora — tend your knowledge</span>
     <ul class="footer-links">
-      <li><a href="https://github.com/Hortora" target="_blank">github</a></li>
-      <li><a href="https://github.com/Hortora/spec" target="_blank">spec</a></li>
-      <li><a href="https://github.com/Hortora/soredium" target="_blank">soredium</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank" rel="noopener noreferrer">spec</a></li>
+      <li><a href="https://github.com/Hortora/soredium" target="_blank" rel="noopener noreferrer">soredium</a></li>
     </ul>
   </footer>
 
