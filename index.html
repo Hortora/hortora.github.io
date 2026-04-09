@@ -575,21 +575,24 @@
           <div class="qs-step-num">02</div>
           <span class="qs-tag">session-time</span>
           <h3>forage — capture</h3>
-          <p>During any project session, invoke forage when something non-obvious surfaces. It queues the entry as a git-tracked submission — nothing touches the live garden yet.</p>
+          <p>When something non-obvious surfaces, forage opens a GitHub issue for a conflict-free ID, validates the entry locally, and opens a PR. CI validates automatically — no manual merge step needed.</p>
           <div class="qs-code">
             <span class="dim"># in any project session</span><br>
-            <span class="prompt">&gt; </span>/forage
+            <span class="prompt">&gt; </span>/forage<br>
+            <span class="dim"># → issue #124 created → PR opened → CI validates</span>
           </div>
         </div>
 
         <div class="qs-step">
           <div class="qs-step-num">03</div>
-          <span class="qs-tag">maintenance</span>
-          <h3>harvest — merge</h3>
-          <p>In a dedicated maintenance session, harvest integrates pending submissions — assigning stable GE-IDs, deduplicating, and committing the result to your garden.</p>
+          <span class="qs-tag">automated</span>
+          <h3>CI validates &amp; integrates</h3>
+          <p>GitHub Actions validates every submission — format, score threshold, duplicate scan, injection check — and posts a result comment. On merge, indexes update automatically and the issue closes.</p>
           <div class="qs-code">
-            <span class="dim"># in a maintenance session</span><br>
-            <span class="prompt">&gt; </span>/harvest
+            <span class="dim"># on PR open — automatic</span><br>
+            <span class="dim">✅ Score 13/15 · auto-approve eligible</span><br>
+            <span class="dim"># on merge — automatic</span><br>
+            <span class="dim">index: integrate GE-0124</span>
           </div>
         </div>
 
@@ -607,12 +610,12 @@
           <div class="qs-terminal-body">
             <span class="prompt">&gt; </span><span class="cmd">/forage</span><br>
             <span class="dim">Captured: Maven skips tests silently</span><br>
-            <span class="dim">  type: gotcha · tech: maven</span><br>
+            <span class="dim">  type: gotcha · score: 12/15</span><br>
             <br>
-            <span class="prompt">$ </span><span class="cmd">git status</span><br>
-            <span class="file">M  submissions/GE-pending-042.md</span><br>
-            <span class="prompt">$ </span><span class="cmd">git log --oneline -1</span><br>
-            <span class="dim">9e3d8a1 forage: capture GE-042 pending</span>
+            <span class="prompt">$ </span><span class="cmd">gh issue view 124</span><br>
+            <span class="dim">GE-0124 · open · label: garden-submission</span><br>
+            <span class="prompt">$ </span><span class="cmd">gh pr view 47</span><br>
+            <span class="dim">submit(GE-0124): maven-surefire-skip · open</span>
           </div>
         </div>
 
@@ -621,33 +624,32 @@
             <div class="qs-dot"></div>
             <div class="qs-dot"></div>
             <div class="qs-dot"></div>
-            <span class="qs-terminal-label">harvest — maintenance session</span>
+            <span class="qs-terminal-label">CI — GitHub Actions</span>
           </div>
           <div class="qs-terminal-body">
-            <span class="prompt">&gt; </span><span class="cmd">/harvest</span><br>
-            <span class="dim">Merged GE-0042 — maven-surefire-skip.md</span><br>
-            <span class="dim">  1 submission · 0 duplicates</span><br>
+            <span class="dim">## Garden Entry Validation</span><br>
+            <span class="dim">ℹ️ Score 12/15: auto-approve eligible</span><br>
+            <span class="dim">✅ No duplicates found</span><br>
+            <span class="dim">✅ All tags in vocabulary</span><br>
             <br>
-            <span class="prompt">$ </span><span class="cmd">git status</span><br>
-            <span class="file">A  tools/maven/maven-surefire-skip.md</span><br>
-            <span class="prompt">$ </span><span class="cmd">git log --oneline -1</span><br>
-            <span class="dim">4a2f1bc harvest: merge GE-0042</span>
+            <span class="file">label: auto-approve-eligible</span><br>
+            <span class="dim"># after merge — automatic</span><br>
+            <span class="dim">index: integrate GE-0124 · issue #124 closed</span>
           </div>
         </div>
 
         <div class="qs-git-tree">
           <div>
             <div class="label">git log — knowledge-garden</div>
-            <div><span class="sha">4a2f1bc</span> harvest: merge GE-0042 — maven-surefire-skip</div>
-            <div><span class="sha">9e3d8a1</span> forage: capture GE-042 pending</div>
-            <div><span class="sha">2b7f4e2</span> forage: capture GE-041 pending</div>
-            <div><span class="sha">c1d3f0e</span> harvest: merge GE-0041 — git-rebase-conflict</div>
+            <div><span class="sha">b3e9f1a</span> index: integrate GE-0124</div>
+            <div><span class="sha">7c2d4e8</span> submit(GE-0124): maven-surefire-skip</div>
+            <div><span class="sha">c1d3f0e</span> index: integrate GE-0123</div>
           </div>
           <div>
-            <div class="label">garden after harvest</div>
-            <div>tools/maven/maven-surefire-skip.md</div>
-            <div>tools/git/git-rebase-conflict.md</div>
-            <div class="dim">submissions/ — empty</div>
+            <div class="label">garden after merge</div>
+            <div>tools/maven/GE-0124.md</div>
+            <div>_summaries/tools/maven/GE-0124.md</div>
+            <div class="dim">issue #124 — closed</div>
           </div>
         </div>
 
@@ -671,7 +673,7 @@
       <div class="pillar">
         <div class="pillar-num">02</div>
         <h3>Governed</h3>
-        <p>Submissions queue separately from the live garden. A merge step deduplicates at three levels. Every entry earns its place. The editorial bar is what makes it worth consulting.</p>
+        <p>CI validates every PR — format, score threshold (≥ 8), injection scan, Jaccard duplicate check. On merge, indexes update automatically. No manual curation step. The editorial bar is enforced before anything reaches the garden.</p>
       </div>
 
       <div class="pillar">
@@ -702,7 +704,7 @@
       <a class="status-card" href="https://github.com/Hortora/garden" target="_blank">
         <div class="status-card-label">hortora /</div>
         <div class="status-card-name">garden</div>
-        <p class="status-card-desc">The root canonical garden. 78 entries across 12 domains. v2 migration in progress.</p>
+        <p class="status-card-desc">The root canonical garden. 119+ entries. CI validates every submission — PR-based, automated, governed.</p>
         <span class="badge badge-active">active</span>
       </a>
 
@@ -716,7 +718,7 @@
       <a class="status-card" href="https://github.com/Hortora/soredium" target="_blank">
         <div class="status-card-label">hortora /</div>
         <div class="status-card-name">soredium</div>
-        <p class="status-card-desc">The starter kit — Claude skills (forage, harvest), validators, and the claude-skill installer. Growing.</p>
+        <p class="status-card-desc">The engine — forage and harvest skills, validate_pr.py, integrate_entry.py, GitHub Actions workflows, garden-setup.sh.</p>
         <span class="badge badge-active">active</span>
       </a>
 
