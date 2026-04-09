@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — Hortora</title>
+  <meta name="description" content="Install the Hortora garden skills and capture your first entry.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav>
+    <a class="nav-mark" href="../index.html">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#what">About</a></li>
+      <li><a href="../index.html#repos">Repos</a></li>
+      <li><a href="getting-started.html" class="active">Docs</a></li>
+      <li><a href="../blog/index.html">Diary</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <div class="docs-layout">
+
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-label">Documentation</div>
+      <nav>
+        <a href="getting-started.html" class="active">Getting Started</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="skills-reference.html">Skills Reference</a>
+        <a href="design-spec.html">Design Spec</a>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+
+      <h1>Getting Started</h1>
+      <p class="lead">Install the Hortora garden skills and capture your first entry.</p>
+
+      <h2>Prerequisites</h2>
+      <p>Hortora garden skills run inside <a href="https://claude.ai/code" target="_blank">Claude Code</a> — Anthropic's CLI for Claude. You'll need:</p>
+      <ul>
+        <li>Claude Code installed and authenticated</li>
+        <li>Python 3.8 or later</li>
+        <li>macOS or Linux</li>
+      </ul>
+
+      <h2>Install the skill manager</h2>
+      <p>Download the <code>claude-skill</code> installer from the soredium repository:</p>
+      <div class="code-block">
+        <span class="comment"># Download the skill manager</span><br>
+        <span class="prompt">$ </span>curl -fsSL https://raw.githubusercontent.com/Hortora/soredium/main/scripts/claude-skill -o claude-skill
+      </div>
+
+      <h2>Install forage and harvest</h2>
+      <p><strong>forage</strong> handles session-time operations (capturing and searching). <strong>harvest</strong> handles maintenance (merging submissions and deduplication).</p>
+      <div class="code-block">
+        <span class="prompt">$ </span>python3 claude-skill install forage<br>
+        <span class="prompt">$ </span>python3 claude-skill install harvest
+      </div>
+      <div class="callout">
+        <strong>Tip:</strong> Claude Code auto-discovers skills placed in <code>~/.claude/skills/</code> — no registration step needed after install.
+      </div>
+
+      <h2>Capture your first entry</h2>
+      <p>During your next Claude Code session, when something non-obvious surfaces — a bug that took an hour to find, a technique worth remembering — Claude will proactively offer to capture it. You can also trigger it directly at any time:</p>
+      <div class="code-block">
+        <span class="comment"># In any Claude Code session</span><br>
+        <span class="prompt">&gt; </span>/forage CAPTURE
+      </div>
+      <p>Claude will ask for the entry details: what technology, what type (gotcha, technique, or undocumented behaviour), and a description. The entry queues as a submission until you run harvest.</p>
+
+      <div class="docs-footer">
+        <span></span>
+        <a href="how-it-works.html" class="docs-next">How It Works</a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank">spec</a></li>
+      <li><a href="https://github.com/Hortora/soredium" target="_blank">soredium</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
