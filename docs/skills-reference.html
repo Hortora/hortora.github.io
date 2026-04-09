@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills Reference — Hortora</title>
+  <meta name="description" content="Complete reference for the forage and harvest Claude Code skills.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav aria-label="Site">
+    <a class="nav-mark" href="../index.html">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#what">About</a></li>
+      <li><a href="../index.html#repos">Repos</a></li>
+      <li><a href="getting-started.html" class="active">Docs</a></li>
+      <li><a href="../blog/index.html">Diary</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <div class="docs-layout">
+
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-label">Documentation</div>
+      <nav aria-label="Documentation">
+        <a href="getting-started.html">Getting Started</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="skills-reference.html" class="active">Skills Reference</a>
+        <a href="design-spec.html">Design Spec</a>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+
+      <h1>Skills Reference</h1>
+      <p class="lead">forage handles session-time operations. harvest handles maintenance. They are installed separately and used in different contexts.</p>
+
+      <h2>forage</h2>
+      <p>Use during active Claude Code sessions when non-obvious knowledge surfaces. forage is lightweight by design — it queues submissions without touching the live garden.</p>
+
+      <table class="skill-table">
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>When to use</th>
+            <th>What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CAPTURE</td>
+            <td>A specific gotcha, technique, or undocumented behaviour surfaces</td>
+            <td>Records a single entry as a submission file, queued for harvest</td>
+          </tr>
+          <tr>
+            <td>SWEEP</td>
+            <td>At the end of a session</td>
+            <td>Systematically scans the full session for anything worth capturing, proposes entries for review</td>
+          </tr>
+          <tr>
+            <td>SEARCH</td>
+            <td>Looking for prior knowledge before solving a problem</td>
+            <td>Retrieves matching entries from the live garden using a three-tier search strategy</td>
+          </tr>
+          <tr>
+            <td>REVISE</td>
+            <td>An existing entry needs enrichment or correction</td>
+            <td>Updates a previously captured entry with new information</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <span class="comment"># Invoke forage in any Claude Code session, then tell Claude what you want</span><br>
+        <span class="prompt">&gt; </span>/forage<br>
+        <span class="comment"># Examples of natural language directions after invoking:</span><br>
+        <span class="comment"># "CAPTURE this gotcha about Maven test skipping"</span><br>
+        <span class="comment"># "SWEEP the session for anything worth keeping"</span><br>
+        <span class="comment"># "SEARCH for entries about git rebase conflicts"</span><br>
+        <span class="comment"># "REVISE GE-0042 with the workaround we just found"</span>
+      </div>
+
+      <h2>harvest</h2>
+      <p>Run in a dedicated maintenance session — not during active project work. harvest reads many files and is intentionally thorough.</p>
+
+      <table class="skill-table">
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>When to use</th>
+            <th>What it does</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MERGE</td>
+            <td>Submissions are pending in <code>submissions/</code></td>
+            <td>Assigns GE-IDs, validates, and integrates queued submissions into the live garden</td>
+          </tr>
+          <tr>
+            <td>DEDUPE</td>
+            <td>After bulk additions or periodically</td>
+            <td>Finds duplicate or overlapping entries using three-level Jaccard similarity, resolves with review</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <span class="comment"># Run harvest in a dedicated Claude Code session</span><br>
+        <span class="prompt">&gt; </span>/harvest<br>
+        <span class="comment"># Then tell Claude: "MERGE" or "DEDUPE"</span>
+      </div>
+
+      <div class="callout">
+        <strong>Full reference:</strong> The complete skill specifications — trigger conditions, operation details, and submission format — are in the <a href="https://github.com/Hortora/soredium/blob/main/forage/SKILL.md" target="_blank" rel="noopener noreferrer">forage SKILL.md</a> and <a href="https://github.com/Hortora/soredium/blob/main/harvest/SKILL.md" target="_blank" rel="noopener noreferrer">harvest SKILL.md</a> on GitHub.
+      </div>
+
+      <div class="docs-footer">
+        <a href="how-it-works.html" class="docs-prev">How It Works</a>
+        <a href="design-spec.html" class="docs-next">Design Spec</a>
+      </div>
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank" rel="noopener noreferrer">spec</a></li>
+      <li><a href="https://github.com/Hortora/soredium" target="_blank" rel="noopener noreferrer">soredium</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
