@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Spec — Hortora</title>
+  <meta name="description" content="Architecture overview: entry format, retrieval, quality lifecycle, and the federation vision.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <nav aria-label="Site">
+    <a class="nav-mark" href="../index.html">Hortora</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#what">About</a></li>
+      <li><a href="../index.html#repos">Repos</a></li>
+      <li><a href="getting-started.html" class="active">Docs</a></li>
+      <li><a href="../blog/index.html">Diary</a></li>
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <div class="docs-layout">
+
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-label">Documentation</div>
+      <nav aria-label="Documentation">
+        <a href="getting-started.html">Getting Started</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="skills-reference.html">Skills Reference</a>
+        <a href="design-spec.html" class="active">Design Spec</a>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+
+      <h1>Design Spec</h1>
+      <p class="lead">Architecture overview — entry format, retrieval strategy, quality lifecycle, and the federation vision.</p>
+
+      <h2>The loop</h2>
+      <p>Hortora is a closed loop between Claude sessions and a governed garden:</p>
+
+      <div class="arch-diagram">
+        <div class="arch-node">
+          <div class="arch-node-box">Claude<br>session</div>
+          <div class="arch-node-label">any project</div>
+        </div>
+        <div class="arch-arrow-group">
+          <div class="arch-arrow">→</div>
+          <div class="arch-arrow-label">forage<br>CAPTURE</div>
+        </div>
+        <div class="arch-node">
+          <div class="arch-node-box arch-light">submissions/</div>
+          <div class="arch-node-label">queue</div>
+        </div>
+        <div class="arch-arrow-group">
+          <div class="arch-arrow">→</div>
+          <div class="arch-arrow-label">harvest<br>MERGE</div>
+        </div>
+        <div class="arch-node">
+          <div class="arch-node-box">knowledge-<br>garden/</div>
+          <div class="arch-node-label">live garden</div>
+        </div>
+        <div class="arch-arrow-group">
+          <div class="arch-arrow">→</div>
+          <div class="arch-arrow-label">forage<br>SEARCH</div>
+        </div>
+        <div class="arch-node">
+          <div class="arch-node-box">Claude<br>session</div>
+          <div class="arch-node-label">any project</div>
+        </div>
+      </div>
+
+      <h2>Entry format</h2>
+      <p>Each entry is a markdown file with YAML frontmatter. The frontmatter carries structured fields for retrieval; the body carries the human-readable content.</p>
+      <div class="code-block">
+        <span class="comment">---</span><br>
+        id: GE-0042<br>
+        title: Maven skips tests silently when Surefire version is missing<br>
+        type: gotcha<br>
+        technology: maven<br>
+        tags: [testing, surefire, build]<br>
+        status: active<br>
+        <span class="comment">---</span><br>
+        <br>
+        <span class="comment">## Symptom</span><br>
+        `mvn test` completes with BUILD SUCCESS but no tests run...<br>
+        <br>
+        <span class="comment">## Root cause</span><br>
+        ...<br>
+        <br>
+        <span class="comment">## Fix</span><br>
+        ...
+      </div>
+
+      <h2>Three-tier retrieval</h2>
+      <p>forage SEARCH finds entries in three passes, stopping when results are sufficient:</p>
+      <ol>
+        <li><strong>By technology</strong> — scan entries matching the exact technology tag. Fast, targeted.</li>
+        <li><strong>By symptom</strong> — full-text match on symptom and title fields across all entries. Catches cross-technology patterns.</li>
+        <li><strong>Full scan</strong> — read all entry bodies. Used when the first two passes return nothing. Budget-limited to keep token cost bounded.</li>
+      </ol>
+
+      <h2>Quality lifecycle</h2>
+      <p>Every entry has a status field that moves through a defined lifecycle:</p>
+      <ul>
+        <li><strong>Active</strong> — current, verified, should be consulted</li>
+        <li><strong>Suspected</strong> — may be outdated or partially incorrect; flagged for review</li>
+        <li><strong>Superseded</strong> — replaced by a newer entry; kept for historical reference</li>
+        <li><strong>Retired</strong> — no longer applicable (e.g. for a deprecated library)</li>
+      </ul>
+
+      <h2>GitHub backend <span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--sage);font-style:normal;margin-left:0.5rem">planned</span></h2>
+      <p>The next phase replaces the local submissions queue with a GitHub PR workflow. Each submission becomes a pull request; CI runs validation and deduplication checks; merging the PR integrates the entry. GitHub Issues serve as stable entry IDs.</p>
+
+      <h2>Federation <span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--sage);font-style:normal;margin-left:0.5rem">planned</span></h2>
+      <p>Gardens federate without centralisation. A <em>canonical garden</em> sets the standard for a domain. <em>Child gardens</em> enrich it with local context. <em>Peer gardens</em> share across domains. Each garden remains sovereign — federation is opt-in and additive.</p>
+
+      <div class="callout">
+        <strong>Full specification:</strong> The complete design — nine implementation phases, federation protocol, deduplication algorithm, and governance model — is in <a href="https://github.com/Hortora/spec/blob/main/docs/design/2026-04-07-garden-rag-redesign-design.md" target="_blank" rel="noopener noreferrer">spec/docs/design/2026-04-07-garden-rag-redesign-design.md</a> on GitHub.
+      </div>
+
+      <div class="docs-footer">
+        <a href="skills-reference.html" class="docs-prev">Skills Reference</a>
+        <span></span>
+      </div>
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="footer-mark">Hortora — tend your knowledge</span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/Hortora" target="_blank" rel="noopener noreferrer">github</a></li>
+      <li><a href="https://github.com/Hortora/spec" target="_blank" rel="noopener noreferrer">spec</a></li>
+      <li><a href="https://github.com/Hortora/soredium" target="_blank" rel="noopener noreferrer">soredium</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
