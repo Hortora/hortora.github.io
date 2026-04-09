@@ -445,6 +445,7 @@
       footer { flex-direction: column; text-align: center; }
     }
   </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -550,6 +551,108 @@
       </a>
     </div>
 
+  </section>
+
+  <!-- ── Quick Start ── -->
+  <section class="quickstart">
+    <div class="quickstart-inner">
+
+      <p class="section-label">Get started in three steps</p>
+
+      <div class="qs-steps">
+
+        <div class="qs-step">
+          <div class="qs-step-num">01</div>
+          <h3>Install from the marketplace</h3>
+          <p>In any Claude Code session, point it at the Hortora marketplace. Skills install automatically — no scripts, no config.</p>
+          <div class="qs-code">
+            <span class="dim"># in any Claude Code session</span><br>
+            <span class="prompt">&gt; </span>/install-skills https://github.com/Hortora/soredium
+          </div>
+        </div>
+
+        <div class="qs-step">
+          <div class="qs-step-num">02</div>
+          <span class="qs-tag">session-time</span>
+          <h3>forage — capture</h3>
+          <p>During any project session, invoke forage when something non-obvious surfaces. It queues the entry as a git-tracked submission — nothing touches the live garden yet.</p>
+          <div class="qs-code">
+            <span class="dim"># in any project session</span><br>
+            <span class="prompt">&gt; </span>/forage
+          </div>
+        </div>
+
+        <div class="qs-step">
+          <div class="qs-step-num">03</div>
+          <span class="qs-tag">maintenance</span>
+          <h3>harvest — merge</h3>
+          <p>In a dedicated maintenance session, harvest integrates pending submissions — assigning stable GE-IDs, deduplicating, and committing the result to your garden.</p>
+          <div class="qs-code">
+            <span class="dim"># in a maintenance session</span><br>
+            <span class="prompt">&gt; </span>/harvest
+          </div>
+        </div>
+
+      </div>
+
+      <div class="qs-graphic">
+
+        <div class="qs-terminal">
+          <div class="qs-terminal-bar">
+            <div class="qs-dot"></div>
+            <div class="qs-dot"></div>
+            <div class="qs-dot"></div>
+            <span class="qs-terminal-label">forage — project session</span>
+          </div>
+          <div class="qs-terminal-body">
+            <span class="prompt">&gt; </span><span class="cmd">/forage</span><br>
+            <span class="dim">Captured: Maven skips tests silently</span><br>
+            <span class="dim">  type: gotcha · tech: maven</span><br>
+            <br>
+            <span class="prompt">$ </span><span class="cmd">git status</span><br>
+            <span class="file">M  submissions/GE-pending-042.md</span><br>
+            <span class="prompt">$ </span><span class="cmd">git log --oneline -1</span><br>
+            <span class="dim">9e3d8a1 forage: capture GE-042 pending</span>
+          </div>
+        </div>
+
+        <div class="qs-terminal">
+          <div class="qs-terminal-bar">
+            <div class="qs-dot"></div>
+            <div class="qs-dot"></div>
+            <div class="qs-dot"></div>
+            <span class="qs-terminal-label">harvest — maintenance session</span>
+          </div>
+          <div class="qs-terminal-body">
+            <span class="prompt">&gt; </span><span class="cmd">/harvest</span><br>
+            <span class="dim">Merged GE-0042 — maven-surefire-skip.md</span><br>
+            <span class="dim">  1 submission · 0 duplicates</span><br>
+            <br>
+            <span class="prompt">$ </span><span class="cmd">git status</span><br>
+            <span class="file">A  tools/maven/maven-surefire-skip.md</span><br>
+            <span class="prompt">$ </span><span class="cmd">git log --oneline -1</span><br>
+            <span class="dim">4a2f1bc harvest: merge GE-0042</span>
+          </div>
+        </div>
+
+        <div class="qs-git-tree">
+          <div>
+            <div class="label">git log — knowledge-garden</div>
+            <div><span class="sha">4a2f1bc</span> harvest: merge GE-0042 — maven-surefire-skip</div>
+            <div><span class="sha">9e3d8a1</span> forage: capture GE-042 pending</div>
+            <div><span class="sha">2b7f4e2</span> forage: capture GE-041 pending</div>
+            <div><span class="sha">c1d3f0e</span> harvest: merge GE-0041 — git-rebase-conflict</div>
+          </div>
+          <div>
+            <div class="label">garden after harvest</div>
+            <div>tools/maven/maven-surefire-skip.md</div>
+            <div>tools/git/git-rebase-conflict.md</div>
+            <div class="dim">submissions/ — empty</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </section>
 
   <div class="divider"><span class="divider-mark">⁂</span></div>
