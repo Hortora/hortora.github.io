@@ -44,26 +44,17 @@
       <p>Hortora garden skills run inside <a href="https://claude.ai/code" target="_blank" rel="noopener noreferrer">Claude Code</a> — Anthropic's CLI for Claude. You'll need:</p>
       <ul>
         <li>Claude Code installed and authenticated</li>
-        <li>Python 3.8 or later</li>
         <li>macOS or Linux</li>
       </ul>
 
-      <h2>Install the skill manager</h2>
-      <p>Download the <code>claude-skill</code> installer from the soredium repository:</p>
+      <h2>Install from the marketplace</h2>
+      <p>In any Claude Code session, give it the Hortora marketplace URL. Claude Code discovers and installs the skills automatically.</p>
       <div class="code-block">
-        <span class="comment"># Download the skill manager</span><br>
-        <span class="prompt">$ </span>curl -fsSL https://raw.githubusercontent.com/Hortora/soredium/main/scripts/claude-skill -o claude-skill
-      </div>
-      <p>The downloaded file is a Python script — invoke it with <code>python3 claude-skill</code> (no chmod needed).</p>
-
-      <h2>Install forage and harvest</h2>
-      <p><strong>forage</strong> handles session-time operations (capturing and searching). <strong>harvest</strong> handles maintenance (merging submissions and deduplication).</p>
-      <div class="code-block">
-        <span class="prompt">$ </span>python3 claude-skill install forage<br>
-        <span class="prompt">$ </span>python3 claude-skill install harvest
+        <span class="comment"># in any Claude Code session</span><br>
+        <span class="prompt">&gt; </span>/install-skills https://github.com/Hortora/soredium
       </div>
       <div class="callout">
-        <strong>Tip:</strong> Claude Code auto-discovers skills placed in <code>~/.claude/skills/</code> — no registration step needed after install.
+        <strong>Tip:</strong> Claude Code places skills in <code>~/.claude/skills/</code> and makes them immediately available in any session — no further setup needed.
       </div>
 
       <h2>Capture your first entry</h2>
