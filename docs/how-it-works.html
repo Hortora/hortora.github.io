@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How It Works — Hortora</title>
-  <meta name="description" content="The garden model, entry lifecycle, and the local-first design of Hortora.">
+  <meta name="description" content="The garden model, entry lifecycle, and the git-backed dual-mode design of Hortora — local and GitHub-connected.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -38,7 +38,7 @@
     <main class="docs-content">
 
       <h1>How It Works</h1>
-      <p class="lead">The garden model, entry lifecycle, and why Hortora is local-first.</p>
+      <p class="lead">The garden model, entry lifecycle, and how Hortora works in both local and GitHub-connected modes.</p>
 
       <h2>The garden model</h2>
       <p>A Hortora garden is a machine-wide library of hard-won technical knowledge stored at <code>~/claude/knowledge-garden/</code>. Every Claude Code session on your machine can read from it and contribute to it.</p>
@@ -51,20 +51,34 @@
       <p>Each entry targets a specific technology and describes exactly one thing. The editorial bar is intentionally high — that's what makes the garden worth consulting.</p>
 
       <h2>Entry lifecycle</h2>
-      <p>Entries move through a governed pipeline from raw capture to live garden:</p>
+      <p>Entries move through a governed pipeline from raw capture to live garden. Forage and harvest support two modes — choose based on your setup:</p>
+
+      <h3>Local mode</h3>
       <ol>
-        <li><strong>Capture</strong> — during a session, forage queues a submission file in <code>~/claude/knowledge-garden/submissions/</code></li>
-        <li><strong>Merge</strong> — in a dedicated maintenance session, harvest MERGE assigns a GE-ID and integrates the submission into the live garden</li>
+        <li><strong>Capture</strong> — forage queues a submission file in <code>~/claude/knowledge-garden/submissions/</code> and assigns a GE-ID from the local counter</li>
+        <li><strong>Validate</strong> — harvest runs <code>validate_pr.py</code> locally; CRITICAL issues block integration</li>
+        <li><strong>Integrate</strong> — harvest calls <code>integrate_entry.py</code>, which updates indexes and commits directly to the local git clone</li>
         <li><strong>Deduplicate</strong> — harvest DEDUPE finds overlapping entries and resolves them, keeping the garden clean</li>
       </ol>
-      <p>The separation between capture (lightweight, session-time) and merge (thorough, maintenance-time) is intentional. It keeps forage fast and keeps the live garden authoritative.</p>
+
+      <h3>GitHub mode</h3>
+      <ol>
+        <li><strong>Capture</strong> — forage opens a GitHub issue on <code>Hortora/garden</code> to claim a GE-ID, then opens a PR with the submission</li>
+        <li><strong>CI validates</strong> — GitHub Actions runs <code>validate_pr.py</code> on every PR; failures block merge with a clear report</li>
+        <li><strong>Integrate</strong> — on merge, a second workflow runs <code>integrate_entry.py</code>; indexes update automatically, no manual step needed</li>
+      </ol>
+
+      <p>Both modes use the same validation logic, the same entry format, and the same garden repository. You can work offline in local mode and push to sync, or use GitHub mode and let CI do the governance.</p>
+      <p>The separation between capture (lightweight, session-time) and integrate (thorough, maintenance-time) is intentional in both modes. It keeps forage fast and keeps the live garden authoritative.</p>
 
       <h2>GE-IDs</h2>
-      <p>Every merged entry gets a stable identifier — <code>GE-0001</code>, <code>GE-0042</code>, and so on. IDs are assigned sequentially at merge time and never reused. They let Claude reference specific entries across sessions and make deduplication tractable.</p>
+      <p>Every merged entry gets a stable identifier — <code>GE-0001</code>, <code>GE-0042</code>, and so on. IDs are assigned sequentially at submission time and never reused. They let Claude reference specific entries across sessions and make deduplication tractable.</p>
 
-      <h2>Local-first</h2>
-      <p>The garden is plain files on your filesystem. No server, no account, no network required after installing the skills. Any Claude Code session that can read <code>~/claude/knowledge-garden/</code> can use the garden.</p>
-      <p>Federation — sharing gardens across machines and teams via GitHub — is planned for a future phase. The local garden you build now will migrate cleanly.</p>
+      <h2>Git-backed</h2>
+      <p>The garden is a git repository — <a href="https://github.com/Hortora/garden" target="_blank" rel="noopener noreferrer">Hortora/garden</a> on GitHub. Every entry is a commit. History is authoritative. No central server is required beyond git itself.</p>
+      <p>To use the garden locally, forage sets up a sparse blobless clone at <code>~/claude/knowledge-garden/</code> during install. This gives you the full garden with minimal disk use, and works entirely offline once cloned.</p>
+      <p>To use the GitHub-connected workflow, point forage at the garden repo. Submissions become PRs, CI validates, and integration is automatic on merge. The same local clone stays in sync via <code>git pull</code>.</p>
+      <p>Both approaches share the same repository and entry format — switching between them requires no migration.</p>
 
       <div class="docs-footer">
         <a href="getting-started.html" class="docs-prev">Getting Started</a>
