@@ -575,11 +575,11 @@
           <div class="qs-step-num">02</div>
           <span class="qs-tag">session-time</span>
           <h3>forage — capture</h3>
-          <p>When something non-obvious surfaces, forage opens a GitHub issue for a conflict-free ID, validates the entry locally, and opens a PR. CI validates automatically — no manual merge step needed.</p>
+          <p>When something non-obvious surfaces, forage generates a collision-free GE-ID locally and opens a PR. No GitHub issue needed — CI validates automatically on every PR.</p>
           <div class="qs-code">
             <span class="dim"># in any project session</span><br>
             <span class="prompt">&gt; </span>/forage<br>
-            <span class="dim"># → issue #124 created → PR opened → CI validates</span>
+            <span class="dim"># → GE-20260410-a3f7c2 generated → PR opened → CI validates</span>
           </div>
         </div>
 
@@ -587,12 +587,12 @@
           <div class="qs-step-num">03</div>
           <span class="qs-tag">automated</span>
           <h3>CI validates &amp; integrates</h3>
-          <p>GitHub Actions validates every submission — format, score threshold, duplicate scan, injection check — and posts a result comment. On merge, indexes update automatically and the issue closes.</p>
+          <p>GitHub Actions validates every submission — format, score threshold, duplicate scan, injection check — and posts a result comment. On merge, indexes update automatically.</p>
           <div class="qs-code">
             <span class="dim"># on PR open — automatic</span><br>
             <span class="dim">✅ Score 13/15 · auto-approve eligible</span><br>
             <span class="dim"># on merge — automatic</span><br>
-            <span class="dim">index: integrate GE-0124</span>
+            <span class="dim">index: integrate GE-20260410-a3f7c2</span>
           </div>
         </div>
 
@@ -611,11 +611,10 @@
             <span class="prompt">&gt; </span><span class="cmd">/forage</span><br>
             <span class="dim">Captured: Maven skips tests silently</span><br>
             <span class="dim">  type: gotcha · score: 12/15</span><br>
+            <span class="dim">  id: GE-20260410-a3f7c2</span><br>
             <br>
-            <span class="prompt">$ </span><span class="cmd">gh issue view 124</span><br>
-            <span class="dim">GE-0124 · open · label: garden-submission</span><br>
             <span class="prompt">$ </span><span class="cmd">gh pr view 47</span><br>
-            <span class="dim">submit(GE-0124): maven-surefire-skip · open</span>
+            <span class="dim">submit(GE-20260410-a3f7c2): maven-surefire-skip · open</span>
           </div>
         </div>
 
@@ -634,22 +633,21 @@
             <br>
             <span class="file">label: auto-approve-eligible</span><br>
             <span class="dim"># after merge — automatic</span><br>
-            <span class="dim">index: integrate GE-0124 · issue #124 closed</span>
+            <span class="dim">index: integrate GE-20260410-a3f7c2</span>
           </div>
         </div>
 
         <div class="qs-git-tree">
           <div>
-            <div class="label">git log — knowledge-garden</div>
-            <div><span class="sha">b3e9f1a</span> index: integrate GE-0124</div>
-            <div><span class="sha">7c2d4e8</span> submit(GE-0124): maven-surefire-skip</div>
-            <div><span class="sha">c1d3f0e</span> index: integrate GE-0123</div>
+            <div class="label">git log — garden</div>
+            <div><span class="sha">b3e9f1a</span> index: integrate GE-20260410-a3f7c2</div>
+            <div><span class="sha">7c2d4e8</span> submit(GE-20260410-a3f7c2): maven-surefire-skip</div>
+            <div><span class="sha">c1d3f0e</span> index: integrate GE-20260409-f1d8e3</div>
           </div>
           <div>
             <div class="label">garden after merge</div>
-            <div>tools/maven/GE-0124.md</div>
-            <div>_summaries/tools/maven/GE-0124.md</div>
-            <div class="dim">issue #124 — closed</div>
+            <div>tools/maven/GE-20260410-a3f7c2.md</div>
+            <div>_summaries/tools/maven/GE-20260410-a3f7c2.md</div>
           </div>
         </div>
 

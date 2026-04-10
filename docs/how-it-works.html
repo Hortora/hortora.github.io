@@ -55,7 +55,7 @@
 
       <h3>Local mode</h3>
       <ol>
-        <li><strong>Capture</strong> — forage queues a submission file in <code>~/.hortora/garden/submissions/</code> and assigns a GE-ID from the local counter</li>
+        <li><strong>Capture</strong> — forage generates a collision-free GE-ID locally and queues a submission file in <code>~/.hortora/garden/submissions/</code></li>
         <li><strong>Validate</strong> — harvest runs <code>validate_pr.py</code> locally; CRITICAL issues block integration</li>
         <li><strong>Integrate</strong> — harvest calls <code>integrate_entry.py</code>, which updates indexes and commits directly to the local git clone</li>
         <li><strong>Deduplicate</strong> — harvest DEDUPE finds overlapping entries and resolves them, keeping the garden clean</li>
@@ -63,7 +63,7 @@
 
       <h3>GitHub mode</h3>
       <ol>
-        <li><strong>Capture</strong> — forage opens a GitHub issue on <code>Hortora/garden</code> to claim a GE-ID, then opens a PR with the submission</li>
+        <li><strong>Capture</strong> — forage generates a collision-free GE-ID locally and opens a PR against <code>Hortora/garden</code></li>
         <li><strong>CI validates</strong> — GitHub Actions runs <code>validate_pr.py</code> on every PR; failures block merge with a clear report</li>
         <li><strong>Integrate</strong> — on merge, a second workflow runs <code>integrate_entry.py</code>; indexes update automatically, no manual step needed</li>
       </ol>
@@ -72,7 +72,7 @@
       <p>The separation between capture (lightweight, session-time) and integrate (thorough, maintenance-time) is intentional in both modes. It keeps forage fast and keeps the live garden authoritative.</p>
 
       <h2>GE-IDs</h2>
-      <p>Every merged entry gets a stable identifier — <code>GE-0001</code>, <code>GE-0042</code>, and so on. IDs are assigned sequentially at submission time and never reused. They let Claude reference specific entries across sessions and make deduplication tractable.</p>
+      <p>Every entry gets a stable identifier assigned by forage at submission time — no coordination with the garden required. The format is <code>GE-YYYYMMDD-xxxxxx</code>: the submission date plus 6 random hex characters (e.g. <code>GE-20260410-a3f7c2</code>). This guarantees uniqueness across concurrent submissions and across federated gardens without a shared counter. IDs are never reused.</p>
 
       <h2>Git-backed</h2>
       <p>The garden is a git repository — <a href="https://github.com/Hortora/garden" target="_blank" rel="noopener noreferrer">Hortora/garden</a> on GitHub. Every entry is a commit. History is authoritative. No central server is required beyond git itself.</p>
