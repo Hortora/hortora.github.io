@@ -41,7 +41,7 @@
       <p class="lead">The garden model, entry lifecycle, and how Hortora works in both local and GitHub-connected modes.</p>
 
       <h2>The garden model</h2>
-      <p>A Hortora garden is a machine-wide library of hard-won technical knowledge stored at <code>~/claude/knowledge-garden/</code>. Every Claude Code session on your machine can read from it and contribute to it.</p>
+      <p>A Hortora garden is a machine-wide library of hard-won technical knowledge stored at <code>~/.hortora/garden/</code>. Every Claude Code session on your machine can read from it and contribute to it.</p>
       <p>Entries come in three kinds:</p>
       <ul>
         <li><strong>Gotchas</strong> — bugs that silently fail, behaviours that contradict documentation, workarounds that took hours to find</li>
@@ -55,7 +55,7 @@
 
       <h3>Local mode</h3>
       <ol>
-        <li><strong>Capture</strong> — forage queues a submission file in <code>~/claude/knowledge-garden/submissions/</code> and assigns a GE-ID from the local counter</li>
+        <li><strong>Capture</strong> — forage queues a submission file in <code>~/.hortora/garden/submissions/</code> and assigns a GE-ID from the local counter</li>
         <li><strong>Validate</strong> — harvest runs <code>validate_pr.py</code> locally; CRITICAL issues block integration</li>
         <li><strong>Integrate</strong> — harvest calls <code>integrate_entry.py</code>, which updates indexes and commits directly to the local git clone</li>
         <li><strong>Deduplicate</strong> — harvest DEDUPE finds overlapping entries and resolves them, keeping the garden clean</li>
@@ -76,7 +76,7 @@
 
       <h2>Git-backed</h2>
       <p>The garden is a git repository — <a href="https://github.com/Hortora/garden" target="_blank" rel="noopener noreferrer">Hortora/garden</a> on GitHub. Every entry is a commit. History is authoritative. No central server is required beyond git itself.</p>
-      <p>To use the garden locally, forage sets up a sparse blobless clone at <code>~/claude/knowledge-garden/</code> during install. This gives you the full garden with minimal disk use, and works entirely offline once cloned.</p>
+      <p>To use the garden locally, forage sets up a sparse blobless clone at <code>~/.hortora/garden/</code> during install. This gives you the full garden with minimal disk use, and works entirely offline once cloned.</p>
       <p>To use the GitHub-connected workflow, point forage at the garden repo. Submissions become PRs, CI validates, and integration is automatic on merge. The same local clone stays in sync via <code>git pull</code>.</p>
       <p>Both approaches share the same repository and entry format — switching between them requires no migration.</p>
 
