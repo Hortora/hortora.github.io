@@ -49,6 +49,33 @@ permalink: /docs/architecture.html
         </ul>
       </div>
 
+      <h2>Decision reasoning survives beyond the session that produced it</h2>
+      <p>An entry that says "do X" is useful once. An entry that says "do X because Y, not Z because..." is useful across library upgrades, team changes, and context shifts. Without captured reasoning, a knowledge garden accumulates cargo-cult fixes — correct procedures whose rationale nobody remembers, applied in contexts where the original reason no longer holds.</p>
+      <p>Hortora treats reasoning as a first-class field, not an optional comment:</p>
+      <ul>
+        <li><strong>Mandatory rationale for high-value entries:</strong> Entries scoring ≥12/15 trigger an explicit prompt at CAPTURE time: "Why this fix over the obvious alternative?" The answer is written into a <code>### Why this fix</code> prose section in the entry body — not a metadata tag, but a readable explanation that travels with the entry permanently.</li>
+        <li><strong>Version-contextualised decisions:</strong> Library and tool-specific entries capture <code>verified_on</code> (e.g. <code>quarkus: 3.34.2</code>) at write time. This tells the next reader exactly when and where the reasoning was valid — not just what the fix was, but under what conditions it was the right call.</li>
+        <li><strong>Reasoning is re-evaluated at review time:</strong> <code>harvest REVIEW</code> treats the rationale section as part of what is confirmed, not just the fix. A reviewer does not reset the staleness clock without affirming that both the workaround and its reasoning still apply. The <code>last_reviewed</code> timestamp records this explicit human confirmation.</li>
+        <li><strong>Full decision history in git:</strong> Entry bodies are committed as plain markdown. If a rationale is revised during a staleness review, the original reasoning is preserved in git history — the evolution of the decision is always auditable, not just its current state.</li>
+      </ul>
+      <div class="callout">
+        <strong>Guarantees</strong>
+        <ul>
+          <li>Every entry scoring ≥12/15 carries explicit prose reasoning at submission time — high-value workarounds always document the decision, not just the fix</li>
+          <li>Reasoning is version-contextualised via <code>verified_on</code> where applicable — readers know when the decision was made, not just that it was made</li>
+          <li>Reasoning is re-evaluated at staleness review — <code>last_reviewed</code> confirms both the fix and its rationale still hold</li>
+          <li>Full decision history is auditable via git — no reasoning is silently overwritten</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Graceful degradation</strong>
+        <ul>
+          <li>Entries below ≥12 do not require explicit rationale — lower-scoring entries may document only the fix; the threshold is a quality floor, not universal coverage</li>
+          <li>Rationale prose is written by the submitter at capture time; quality depends on the developer's context in that session — there is no automated reasoning validation</li>
+          <li>Cross-entry reasoning (architectural trade-offs spanning multiple entries) is not automatically linked — related decisions require manual <code>See also:</code> references added during <code>harvest REVIEW</code></li>
+        </ul>
+      </div>
+
       <h2>No entry enters the garden without passing validation</h2>
       <p>AI-generated content can be plausible-sounding but wrong, duplicate, or malformed. An unguarded knowledge store accumulates noise that erodes trust faster than it accumulates value — and bad entries are harder to find than good ones.</p>
       <p>Every submission passes a multi-gate validation pipeline (<code>validate_pr.py</code>):</p>
