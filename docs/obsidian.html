@@ -1,0 +1,171 @@
+---
+layout: default
+title: "Obsidian Integration — Hortora"
+permalink: /docs/obsidian.html
+---
+
+  <div class="docs-layout">
+
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-label">Documentation</div>
+      <nav aria-label="Documentation">
+        <a href="getting-started.html">Getting Started</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="skills-reference.html">Skills Reference</a>
+        <a href="design-spec.html">Design Spec</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="garden.html">Garden Browser</a>
+        <a href="obsidian.html" class="active">Obsidian</a>
+      </nav>
+    </aside>
+
+    <main class="docs-content">
+
+      <h1>Obsidian Integration</h1>
+      <p class="lead">The garden format is Obsidian-native. No plugin required — open the garden as a vault and Obsidian reads it directly.</p>
+
+      <h2>Why it works without a plugin</h2>
+      <p>Every garden entry is a YAML-frontmatter markdown file. Obsidian reads YAML frontmatter natively as properties. The <code>tags:</code> field maps to Obsidian tags. The body is standard markdown. Nothing needs to be transformed.</p>
+      <div class="callout">
+        <strong>Zero configuration:</strong> Open the garden directory as an Obsidian vault. The tags panel, property search, and Dataview queries all work immediately against the garden's existing structure.
+      </div>
+
+      <h2>Setup</h2>
+      <p>Clone the garden with a sparse blobless clone so only index files and entry bodies you open are fetched from the remote. Entry bodies load on demand — the initial clone stays small even as the garden grows.</p>
+      <div class="code-block">
+        <span class="comment"># Clone with sparse checkout — only index files materialise</span><br>
+        git clone --filter=blob:none --no-checkout \<br>
+        &nbsp;&nbsp;https://github.com/Hortora/garden ~/.hortora/garden<br><br>
+        cd ~/.hortora/garden<br>
+        git sparse-checkout init<br>
+        git sparse-checkout set \<br>
+        &nbsp;&nbsp;GARDEN.md SCHEMA.md CHECKED.md \<br>
+        &nbsp;&nbsp;"*/INDEX.md" "*/GE-*.md"<br>
+        git checkout main
+      </div>
+      <p>Then open <code>~/.hortora/garden</code> as an Obsidian vault: <strong>Open another vault → Open folder as vault</strong>.</p>
+      <p>Install the <a href="https://github.com/denolehov/obsidian-git" target="_blank" rel="noopener noreferrer">Obsidian Git</a> community plugin to keep the garden synced. Set it to pull on startup and auto-commit at an interval if you want to capture from Obsidian.</p>
+
+      <h2>What works natively</h2>
+      <p>Once the vault is open, Obsidian's built-in features work against the garden immediately:</p>
+      <ul>
+        <li><strong>Properties panel:</strong> every entry's <code>score</code>, <code>type</code>, <code>domain</code>, <code>submitted</code>, and <code>staleness_threshold</code> appear as sortable properties</li>
+        <li><strong>Tags:</strong> <code>tags: [hibernate, jpa, flush]</code> → Obsidian tag search and the tag pane</li>
+        <li><strong>Full-text search:</strong> Obsidian's built-in search scans all entry bodies</li>
+        <li><strong>Graph view:</strong> entries linked via <code>See also: GE-XXXX</code> in the body are visible in Obsidian's graph if you create wikilinks</li>
+        <li><strong>Backlinks:</strong> works if you convert <code>See also</code> references to <code>[[GE-XXXX]]</code> wikilinks (can be done with a find-replace)</li>
+      </ul>
+
+      <h2>Dataview queries</h2>
+      <p>Install the <a href="https://github.com/blacksmithgu/obsidian-dataview" target="_blank" rel="noopener noreferrer">Dataview</a> community plugin to query the garden as a database. These queries work against the garden's existing frontmatter fields — no changes to entry files needed.</p>
+
+      <h3>Staleness view — entries past threshold</h3>
+      <p>Shows entries where the age (days since submission) exceeds the entry's own <code>staleness_threshold</code>.</p>
+      <div class="code-block">
+        <span class="comment">```dataview</span><br>
+        TABLE title, score, staleness_threshold, submitted<br>
+        FROM ""<br>
+        WHERE contains(file.frontmatter.id, "GE-")<br>
+        WHERE (date(today) - date(submitted)).days > staleness_threshold<br>
+        SORT submitted ASC<br>
+        <span class="comment">```</span>
+      </div>
+
+      <h3>High-value entries — score ≥ 12</h3>
+      <div class="code-block">
+        <span class="comment">```dataview</span><br>
+        TABLE title, score, domain, submitted<br>
+        FROM ""<br>
+        WHERE contains(file.frontmatter.id, "GE-") AND score >= 12<br>
+        SORT score DESC<br>
+        <span class="comment">```</span>
+      </div>
+
+      <h3>Entries by domain</h3>
+      <div class="code-block">
+        <span class="comment">```dataview</span><br>
+        TABLE length(rows) AS "Entries"<br>
+        FROM ""<br>
+        WHERE contains(file.frontmatter.id, "GE-")<br>
+        GROUP BY domain<br>
+        <span class="comment">```</span>
+      </div>
+
+      <h3>Recent captures — last 30 days</h3>
+      <div class="code-block">
+        <span class="comment">```dataview</span><br>
+        TABLE title, type, score, submitted<br>
+        FROM ""<br>
+        WHERE contains(file.frontmatter.id, "GE-")<br>
+        WHERE (date(today) - date(submitted)).days &lt; 30<br>
+        SORT submitted DESC<br>
+        <span class="comment">```</span>
+      </div>
+
+      <h3>Gotchas only — by stack</h3>
+      <div class="code-block">
+        <span class="comment">```dataview</span><br>
+        TABLE title, stack, score<br>
+        FROM ""<br>
+        WHERE contains(file.frontmatter.id, "GE-") AND type = "gotcha"<br>
+        SORT stack ASC<br>
+        <span class="comment">```</span>
+      </div>
+
+      <h2>Capturing from Obsidian</h2>
+      <p>You can write entries directly in Obsidian, but they bypass the validation pipeline (score threshold, format check, L1 deduplication). Always submit via pull request to get CI validation:</p>
+      <ol>
+        <li>Write the entry in Obsidian using the template below</li>
+        <li>Save to the correct domain directory: <code>java/GE-YYYYMMDD-xxxxxx.md</code></li>
+        <li>Commit with Obsidian Git and open a PR on GitHub</li>
+        <li>CI validates the entry — merge when it passes</li>
+      </ol>
+      <div class="callout">
+        <strong>ID generation:</strong> Use the MCP server's <code>garden_capture</code> tool to generate a valid GE-ID and create the branch automatically, then copy the entry content into Obsidian for editing.
+      </div>
+
+      <h2>Entry template</h2>
+      <p>Add this as an Obsidian template (Templates core plugin or Templater community plugin):</p>
+      <div class="code-block">
+        ---<br>
+        id: GE-&lt;YYYYMMDD&gt;-&lt;6hex&gt;<br>
+        title: "Short imperative title — the weird thing, not the fix"<br>
+        type: gotcha<br>
+        domain: java<br>
+        stack: "Technology, Library, Version"<br>
+        tags: [tag1, tag2]<br>
+        score: 10<br>
+        verified: true<br>
+        staleness_threshold: 730<br>
+        submitted: &lt;% tp.date.now("YYYY-MM-DD") %&gt;<br>
+        ---<br><br>
+        ## Title<br><br>
+        **ID:** GE-&lt;YYYYMMDD&gt;-&lt;6hex&gt;<br>
+        **Stack:** Technology, Library, Version<br>
+        **Symptom:** What you observe.<br>
+        **Context:** When and where this applies.<br><br>
+        ### What was tried (didn't work)<br>
+        - tried X — result<br><br>
+        ### Root cause<br>
+        Why it happens.<br><br>
+        ### Fix<br>
+        Code or config.<br><br>
+        ### Why this is non-obvious<br>
+        The insight.<br><br>
+        *Score: 10/15 · Included because: [reason] · Reservation: none*
+      </div>
+
+      <h2>Known limitations</h2>
+      <ul>
+        <li><strong>Writes bypass CI:</strong> entries created or edited directly in Obsidian skip the validation pipeline. Always submit via PR to get score checking and deduplication.</li>
+        <li><strong>See also references:</strong> <code>See also: GE-XXXX [title]</code> in entry bodies are plain text, not wikilinks. Obsidian's graph view won't show these connections unless you manually convert them to <code>[[GE-XXXX]]</code> syntax.</li>
+        <li><strong>Sparse checkout:</strong> with blobless sparse checkout, entry bodies not yet fetched appear as empty files in Obsidian until you open them (which triggers the on-demand fetch).</li>
+      </ul>
+
+      <div class="docs-footer">
+        <a href="garden.html" class="docs-prev">Garden Browser</a>
+        <span></span>
+      </div>
+
+    </main>
+  </div>

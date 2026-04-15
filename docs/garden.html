@@ -1,0 +1,881 @@
+---
+layout: default
+title: "Garden Browser — Hortora"
+permalink: /docs/garden.html
+---
+
+<style>
+/* ── Garden browser overrides ── */
+.garden-outer {
+  display: flex;
+  margin-top: 4.5rem;
+  min-height: calc(100vh - 4.5rem);
+}
+
+/* Sidebar reuse */
+.garden-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  padding: 2.5rem 1.5rem;
+  border-right: 1px solid var(--sage-light);
+  background: var(--parchment-dark);
+  position: sticky;
+  top: 4.5rem;
+  height: calc(100vh - 4.5rem);
+  overflow-y: auto;
+}
+
+/* Main browsing area */
+.garden-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Search + filter bar */
+.garden-toolbar {
+  padding: 1.75rem 2.5rem 0;
+  border-bottom: 1px solid var(--sage-light);
+  background: var(--parchment);
+  position: sticky;
+  top: 4.5rem;
+  z-index: 10;
+}
+
+.garden-search-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.garden-search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 480px;
+}
+
+.garden-search-wrap svg {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sage);
+  pointer-events: none;
+}
+
+.garden-search {
+  width: 100%;
+  padding: 0.6rem 0.9rem 0.6rem 2.6rem;
+  background: var(--parchment-dark);
+  border: 1px solid var(--sage-light);
+  border-radius: 4px;
+  font-family: 'Lora', serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.garden-search:focus { border-color: var(--sage); }
+.garden-search::placeholder { color: var(--sage); }
+
+.garden-stats {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--sage);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* Domain filter tabs */
+.garden-domains {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 0;
+}
+
+.domain-tab {
+  padding: 0.5rem 1.1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-light);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.domain-tab:hover { color: var(--forest); border-bottom-color: var(--sage-light); }
+.domain-tab.active { color: var(--forest); border-bottom-color: var(--forest); font-weight: 600; }
+
+.domain-tab .tab-count {
+  display: inline-block;
+  margin-left: 0.35rem;
+  font-size: 0.65rem;
+  color: var(--sage);
+  font-weight: 400;
+}
+
+/* Entry grid */
+.garden-entries {
+  flex: 1;
+  padding: 2rem 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  align-content: start;
+}
+
+/* Entry card */
+.entry-card {
+  background: white;
+  border: 1px solid var(--sage-light);
+  border-radius: 5px;
+  padding: 1.1rem 1.25rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
+  position: relative;
+}
+
+.entry-card:hover {
+  box-shadow: 0 3px 12px rgba(60, 96, 64, 0.12);
+  transform: translateY(-1px);
+  border-color: var(--sage);
+}
+
+.entry-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.entry-type {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.entry-type.gotcha      { background: #FDF0E8; color: #8B4513; }
+.entry-type.technique   { background: #EBF4EC; color: var(--forest); }
+.entry-type.undocumented { background: #FDF8E8; color: var(--gold); }
+
+.entry-title {
+  font-family: 'Lora', serif;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.entry-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.entry-score {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--sage);
+  letter-spacing: 0.04em;
+}
+
+.entry-domain-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--parchment-dark);
+  border-radius: 2px;
+  color: var(--ink-light);
+  letter-spacing: 0.04em;
+}
+
+.entry-stale {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: #B45309;
+  letter-spacing: 0.04em;
+}
+
+.entry-stale-warn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--gold);
+}
+
+/* Entry detail panel */
+.entry-detail {
+  position: fixed;
+  top: 4.5rem;
+  right: 0;
+  width: 440px;
+  height: calc(100vh - 4.5rem);
+  background: var(--parchment);
+  border-left: 1px solid var(--sage-light);
+  box-shadow: -4px 0 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  overflow: hidden;
+}
+
+.entry-detail.open { transform: translateX(0); }
+
+.detail-header {
+  padding: 1.5rem 1.75rem 1rem;
+  border-bottom: 1px solid var(--sage-light);
+  background: var(--parchment-dark);
+  flex-shrink: 0;
+}
+
+.detail-close {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.detail-close button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--sage);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.25rem;
+  transition: color 0.15s;
+}
+
+.detail-close button:hover { color: var(--ink); }
+
+.detail-type-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.detail-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--sage);
+  letter-spacing: 0.06em;
+}
+
+.detail-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.detail-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 1.75rem;
+}
+
+.detail-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.82rem;
+}
+
+.detail-field-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sage);
+  padding-top: 0.1rem;
+  white-space: nowrap;
+}
+
+.detail-field-value {
+  color: var(--ink-light);
+  font-family: 'Lora', serif;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.detail-tag {
+  padding: 0.1rem 0.45rem;
+  background: var(--parchment-dark);
+  border: 1px solid var(--sage-light);
+  border-radius: 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--ink-light);
+}
+
+.detail-divider {
+  border: none;
+  border-top: 1px solid var(--sage-light);
+  margin: 1.25rem 0;
+}
+
+.detail-content {
+  font-family: 'Lora', serif;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--ink-light);
+}
+
+.detail-content h2,
+.detail-content h3 {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--forest);
+  margin: 1.25rem 0 0.4rem;
+  font-weight: 500;
+}
+
+.detail-content h2 { font-size: 1.1rem; }
+.detail-content h3 { font-size: 0.95rem; }
+
+.detail-content p   { margin-bottom: 0.75rem; }
+.detail-content ul,
+.detail-content ol  { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.detail-content li  { margin-bottom: 0.25rem; }
+
+.detail-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--parchment-dark);
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+}
+
+.detail-content pre {
+  background: var(--parchment-dark);
+  border: 1px solid var(--sage-light);
+  border-radius: 4px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+}
+
+.detail-content pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.78rem;
+}
+
+.detail-stale-banner {
+  padding: 0.6rem 1rem;
+  background: #FEF3C7;
+  border: 1px solid #F59E0B;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: #92400E;
+  letter-spacing: 0.04em;
+}
+
+/* Loading and empty states */
+.garden-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.garden-state-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.garden-state h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.garden-state p {
+  font-size: 0.85rem;
+  color: var(--sage);
+  font-style: italic;
+  max-width: 360px;
+}
+
+.loading-dots {
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.loading-dots span {
+  width: 6px; height: 6px;
+  background: var(--sage);
+  border-radius: 50%;
+  animation: dotPulse 1.2s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+  40%            { transform: scale(1);   opacity: 1; }
+}
+</style>
+
+<div class="garden-outer">
+
+  <aside class="garden-sidebar">
+    <div class="docs-sidebar-label">Documentation</div>
+    <nav aria-label="Documentation">
+      <a href="getting-started.html">Getting Started</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="skills-reference.html">Skills Reference</a>
+      <a href="design-spec.html">Design Spec</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="garden.html" class="active">Garden Browser</a>
+      <a href="obsidian.html">Obsidian</a>
+    </nav>
+  </aside>
+
+  <div class="garden-main">
+
+    <div class="garden-toolbar">
+      <div class="garden-search-row">
+        <div class="garden-search-wrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input class="garden-search" type="search" id="searchInput"
+                 placeholder="Search entries — title, stack, tags…" autocomplete="off">
+        </div>
+        <span class="garden-stats" id="statsLabel">loading…</span>
+      </div>
+      <div class="garden-domains" id="domainTabs">
+        <button class="domain-tab active" data-domain="all">
+          All <span class="tab-count" id="countAll"></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="garden-entries" id="entryGrid">
+      <div class="garden-state">
+        <div class="garden-state-icon">
+          <div class="loading-dots">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <h3>Loading garden</h3>
+        <p>Fetching entries from the canonical garden…</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Entry detail panel (outside flex flow) -->
+<div class="entry-detail" id="entryDetail" role="dialog" aria-label="Entry detail">
+  <div class="detail-header">
+    <div class="detail-close">
+      <button onclick="closeDetail()" aria-label="Close">✕</button>
+    </div>
+    <div class="detail-type-row">
+      <span class="entry-type" id="detailType"></span>
+      <span class="detail-id" id="detailId"></span>
+    </div>
+    <div class="detail-title" id="detailTitle"></div>
+  </div>
+  <div class="detail-body">
+    <div id="detailStale"></div>
+    <div class="detail-fields" id="detailFields"></div>
+    <hr class="detail-divider">
+    <div class="detail-content" id="detailContent">
+      <div class="garden-state" style="padding: 2rem 0;">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <p style="margin-top:0.75rem">Loading entry…</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const RAW = 'https://raw.githubusercontent.com/Hortora/garden/main';
+  const GARDEN_REPO = 'Hortora/garden';
+
+  let allEntries = [];
+  let fuse = null;
+  let activeDomain = 'all';
+  let activeSearch = '';
+
+  // ── Parsing ──────────────────────────────────────────────────────────────
+
+  function parseDomains(gardenMd) {
+    const m = gardenMd.match(/## By Technology\n([\s\S]*?)(?=\n## |\s*$)/);
+    if (!m) return [];
+    const domains = [];
+    for (const match of m[1].matchAll(/^### (.+)$/gm)) {
+      domains.push(match[1].trim().toLowerCase().replace(/\s+/g, '-'));
+    }
+    return domains;
+  }
+
+  function parseIndex(content) {
+    const GE_RE = /GE-\d{8}-[0-9a-f]{6}|GE-\d{4}/;
+    const entries = [];
+    for (const line of content.split('\n')) {
+      if (!line.startsWith('|')) continue;
+      const cells = line.split('|').map(c => c.trim()).filter(Boolean);
+      if (!cells.length || cells.every(c => c.startsWith('-'))) continue;
+      const idMatch = cells[0].match(GE_RE) || (cells[0] !== 'GE-ID' ? null : null);
+      if (!idMatch || cells[0] === 'GE-ID') continue;
+      entries.push({ id: idMatch[0], title: cells[1] || '' });
+    }
+    return entries;
+  }
+
+  function parseFrontmatter(content) {
+    const m = content.replace(/\r\n/g, '\n').match(/^---\n([\s\S]*?)\n---/);
+    if (!m) return {};
+    const result = {};
+    for (const line of m[1].split('\n')) {
+      const colon = line.indexOf(':');
+      if (colon === -1) continue;
+      const key = line.slice(0, colon).trim();
+      let val = line.slice(colon + 1).trim();
+      if (val.startsWith('[') && val.endsWith(']')) {
+        result[key] = val.slice(1, -1).split(',').map(v => v.trim().replace(/['"]/g, '')).filter(Boolean);
+      } else if (/^\d+$/.test(val)) {
+        result[key] = parseInt(val);
+      } else {
+        result[key] = val.replace(/^["']|["']$/g, '');
+      }
+    }
+    return result;
+  }
+
+  function parseBody(content) {
+    const m = content.replace(/\r\n/g, '\n').match(/^---\n[\s\S]*?\n---\n([\s\S]*)$/);
+    return m ? m[1].trim() : content;
+  }
+
+  // ── Staleness ─────────────────────────────────────────────────────────────
+
+  function stalenessInfo(submitted, threshold) {
+    if (!submitted || !threshold) return null;
+    const ms = Date.now() - new Date(submitted).getTime();
+    const days = Math.floor(ms / 86400000);
+    if (days > threshold) return { level: 'stale', days };
+    if (days > threshold * 0.75) return { level: 'warn', days };
+    return { level: 'fresh', days };
+  }
+
+  // ── Rendering ─────────────────────────────────────────────────────────────
+
+  function typeBadgeHtml(type) {
+    const t = (type || 'gotcha').toLowerCase();
+    return `<span class="entry-type ${t}">${t}</span>`;
+  }
+
+  function renderCard(entry) {
+    const st = stalenessInfo(entry.submitted, entry.staleness_threshold);
+    let staleMeta = '';
+    if (st && st.level === 'stale')
+      staleMeta = `<span class="entry-stale">⚠ ${st.days}d old</span>`;
+    else if (st && st.level === 'warn')
+      staleMeta = `<span class="entry-stale-warn">↻ ${st.days}d old</span>`;
+
+    const scoreLabel = entry.score ? `<span class="entry-score">${entry.score}/15</span>` : '';
+    const domainTag = entry.domain ? `<span class="entry-domain-tag">${entry.domain}</span>` : '';
+
+    return `
+      <article class="entry-card" onclick="openDetail('${entry.id}','${entry.domain}')" tabindex="0"
+               onkeydown="if(event.key==='Enter')openDetail('${entry.id}','${entry.domain}')">
+        <div class="entry-card-header">
+          ${typeBadgeHtml(entry.type)}
+          <div class="entry-title">${entry.title}</div>
+        </div>
+        <div class="entry-meta">
+          ${scoreLabel}
+          ${domainTag}
+          ${staleMeta}
+        </div>
+      </article>`;
+  }
+
+  function renderGrid(entries) {
+    const grid = document.getElementById('entryGrid');
+    if (!entries.length) {
+      grid.innerHTML = `
+        <div class="garden-state">
+          <div class="garden-state-icon">🌿</div>
+          <h3>No entries found</h3>
+          <p>Try a different search term or domain filter.</p>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = entries.map(renderCard).join('');
+  }
+
+  function applyFilters() {
+    let filtered = allEntries;
+    if (activeDomain !== 'all') {
+      filtered = filtered.filter(e => e.domain === activeDomain);
+    }
+    if (activeSearch.trim() && fuse) {
+      const results = fuse.search(activeSearch.trim());
+      const ids = new Set(results.map(r => r.item.id));
+      filtered = filtered.filter(e => ids.has(e.id));
+    }
+    renderGrid(filtered);
+  }
+
+  // ── Domain tabs ───────────────────────────────────────────────────────────
+
+  function buildDomainTabs(domains) {
+    const tabsEl = document.getElementById('domainTabs');
+    document.getElementById('countAll').textContent = `(${allEntries.length})`;
+
+    for (const domain of domains) {
+      const count = allEntries.filter(e => e.domain === domain).length;
+      if (!count) continue;
+      const btn = document.createElement('button');
+      btn.className = 'domain-tab';
+      btn.dataset.domain = domain;
+      btn.innerHTML = `${domain} <span class="tab-count">(${count})</span>`;
+      btn.onclick = () => {
+        activeDomain = domain;
+        tabsEl.querySelectorAll('.domain-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      };
+      tabsEl.appendChild(btn);
+    }
+
+    tabsEl.querySelector('[data-domain="all"]').onclick = () => {
+      activeDomain = 'all';
+      tabsEl.querySelectorAll('.domain-tab').forEach(t => t.classList.remove('active'));
+      tabsEl.querySelector('[data-domain="all"]').classList.add('active');
+      applyFilters();
+    };
+  }
+
+  // ── Entry detail ──────────────────────────────────────────────────────────
+
+  window.openDetail = async function(geId, domain) {
+    const panel = document.getElementById('entryDetail');
+    const entry = allEntries.find(e => e.id === geId);
+    if (!entry) return;
+
+    document.getElementById('detailType').className = `entry-type ${(entry.type||'').toLowerCase()}`;
+    document.getElementById('detailType').textContent = entry.type || '';
+    document.getElementById('detailId').textContent = geId;
+    document.getElementById('detailTitle').textContent = entry.title || '';
+
+    // Staleness banner
+    const st = stalenessInfo(entry.submitted, entry.staleness_threshold);
+    const staleEl = document.getElementById('detailStale');
+    if (st && st.level === 'stale') {
+      staleEl.innerHTML = `<div class="detail-stale-banner">⚠ Entry is ${st.days} days old — last verified ${entry.submitted || 'unknown'}. Verify before acting.</div>`;
+    } else {
+      staleEl.innerHTML = '';
+    }
+
+    // Fields
+    const tags = Array.isArray(entry.tags) ? entry.tags : [];
+    const tagsHtml = tags.length
+      ? tags.map(t => `<span class="detail-tag">${t}</span>`).join('')
+      : '—';
+
+    document.getElementById('detailFields').innerHTML = `
+      <span class="detail-field-label">Stack</span>
+      <span class="detail-field-value">${entry.stack || '—'}</span>
+      <span class="detail-field-label">Score</span>
+      <span class="detail-field-value">${entry.score || '—'}/15</span>
+      <span class="detail-field-label">Submitted</span>
+      <span class="detail-field-value">${entry.submitted || '—'}</span>
+      <span class="detail-field-label">Tags</span>
+      <div class="detail-tags">${tagsHtml}</div>
+    `;
+
+    // Show panel with loading state
+    document.getElementById('detailContent').innerHTML = `
+      <div class="garden-state" style="padding: 2rem 0;">
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <p style="margin-top:0.75rem">Loading…</p>
+      </div>`;
+    panel.classList.add('open');
+
+    // Fetch full entry body
+    try {
+      const res = await fetch(`${RAW}/${domain}/${geId}.md`);
+      if (!res.ok) throw new Error('Not found');
+      const content = await res.text();
+      const body = parseBody(content);
+      document.getElementById('detailContent').innerHTML = renderMarkdown(body);
+    } catch {
+      document.getElementById('detailContent').innerHTML =
+        '<p style="color:var(--sage);font-style:italic">Could not load entry content.</p>';
+    }
+  };
+
+  window.closeDetail = function() {
+    document.getElementById('entryDetail').classList.remove('open');
+  };
+
+  // Close panel on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeDetail();
+  });
+
+  // ── Simple Markdown renderer ───────────────────────────────────────────────
+
+  function renderMarkdown(md) {
+    return md
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      // Code blocks
+      .replace(/```[\w]*\n([\s\S]*?)```/g, (_, code) =>
+        `<pre><code>${code}</code></pre>`)
+      // Inline code
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      // Headings
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      // Bold
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // Italic
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // Bullet lists
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)+/g, match => `<ul>${match}</ul>`)
+      // Paragraphs (double newline)
+      .split(/\n{2,}/).map(block => {
+        block = block.trim();
+        if (!block) return '';
+        if (block.startsWith('<')) return block;
+        return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+      }).join('\n');
+  }
+
+  // ── Data loading ──────────────────────────────────────────────────────────
+
+  async function fetchText(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
+    return res.text();
+  }
+
+  async function loadGarden() {
+    try {
+      const gardenMd = await fetchText(`${RAW}/GARDEN.md`);
+      const domains = parseDomains(gardenMd);
+
+      if (!domains.length) {
+        document.getElementById('entryGrid').innerHTML = `
+          <div class="garden-state">
+            <div class="garden-state-icon">🌱</div>
+            <h3>Garden is empty</h3>
+            <p>No domain entries found in GARDEN.md. Check back after entries are merged.</p>
+          </div>`;
+        document.getElementById('statsLabel').textContent = '0 entries';
+        return;
+      }
+
+      // Load all domain indexes in parallel
+      const domainResults = await Promise.allSettled(
+        domains.map(async (domain) => {
+          const idx = await fetchText(`${RAW}/${domain}/INDEX.md`).catch(() => '');
+          const indexEntries = parseIndex(idx);
+          // Enrich with domain; try to fetch frontmatter for metadata
+          const enriched = await Promise.allSettled(
+            indexEntries.map(async (e) => {
+              try {
+                const txt = await fetchText(`${RAW}/${domain}/${e.id}.md`);
+                const fm = parseFrontmatter(txt);
+                return { ...e, ...fm, domain: domain };
+              } catch {
+                return { ...e, domain: domain };
+              }
+            })
+          );
+          return enriched.filter(r => r.status === 'fulfilled').map(r => r.value);
+        })
+      );
+
+      for (const result of domainResults) {
+        if (result.status === 'fulfilled') {
+          allEntries = allEntries.concat(result.value);
+        }
+      }
+
+      // Build Fuse.js search index
+      fuse = new Fuse(allEntries, {
+        keys: ['title', 'tags', 'stack', 'domain'],
+        threshold: 0.35,
+        minMatchCharLength: 2,
+      });
+
+      const statsEl = document.getElementById('statsLabel');
+      statsEl.textContent = `${allEntries.length} ${allEntries.length === 1 ? 'entry' : 'entries'}`;
+
+      buildDomainTabs(domains);
+      renderGrid(allEntries);
+
+    } catch (err) {
+      document.getElementById('entryGrid').innerHTML = `
+        <div class="garden-state">
+          <div class="garden-state-icon">⚠</div>
+          <h3>Could not load garden</h3>
+          <p>The garden may be private or temporarily unavailable. <a href="https://github.com/${GARDEN_REPO}" target="_blank" rel="noopener">View on GitHub</a>.</p>
+        </div>`;
+      document.getElementById('statsLabel').textContent = 'unavailable';
+    }
+  }
+
+  // ── Search wiring ─────────────────────────────────────────────────────────
+
+  const searchInput = document.getElementById('searchInput');
+  let searchTimer;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      activeSearch = searchInput.value;
+      applyFilters();
+    }, 200);
+  });
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+
+  loadGarden();
+
+})();
+</script>
