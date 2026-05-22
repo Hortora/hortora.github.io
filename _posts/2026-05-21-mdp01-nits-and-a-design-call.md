@@ -4,7 +4,7 @@ title: "Nits and a Design Call"
 date: 2026-05-21
 type: phase-update
 entry_type: note
-subtype: log
+subtype: diary
 projects: [hortora]
 ---
 

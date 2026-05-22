@@ -4,7 +4,7 @@ title: "The Parser That Couldn't Parse Itself"
 date: 2026-05-21
 type: phase-update
 entry_type: note
-subtype: log
+subtype: diary
 projects: [hortora]
 entry: "21"
 excerpt: "The garden backfill wasn't 500 unindexed entries — it was 80 GARDEN.md gaps, one broken YAML parser, and a self-defeating gotcha entry."
