@@ -5,7 +5,7 @@ date: 2026-06-08
 type: phase-update
 entry_type: note
 subtype: diary
-projects: [garden-engine, hortora]
+projects: [engine, hortora]
 tags: [langchain4j, qdrant, retrieval, rag]
 ---
 
@@ -30,7 +30,7 @@ wrapper, zero RAG coupling, sitting below LangChain4J rather than beside it.
 The spec is in Hortora's repo. CaseHub builds it; Hortora takes it as a
 dependency when SPLADE validation passes.
 
-With the architecture settled, `Hortora/garden-engine` went from zero to a
+With the architecture settled, `Hortora/engine` went from zero to a
 working phase 1. Quarkus 3.36.1, Java 25, GraalVM native CI. On startup it
 scans `~/.hortora/garden`, embeds every entry via Ollama, upserts into Qdrant.
 Exposes `GET /search` and two MCP tools — `garden_search` and `garden_status` —

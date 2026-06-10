@@ -20,7 +20,7 @@ Then we ran the mining pipeline against real code for the first time. Five of Sa
 
 The result was immediately interesting. Quarkus and Hibernate ORM cluster as structurally similar (thousands of interfaces, similar abstraction depth) but diverge on a single signal: injection points per file. Quarkus sits at ~0.4; Hibernate at ~0.002. Two hundred times different. We turned that into a patterns entry — CDI container wiring versus service-loader wiring, with the injection ratio as the discriminator. That's the kind of output I wanted from this pipeline.
 
-The bigger build was garden-engine: a native Quarkus service that ports the Python mining pipeline and adds an AI-driven harvest layer. I chose JLama as the default inference backend — in-process Java, auto-downloads from HuggingFace, no external daemon — backed by Qwen2.5-3B, with Sonnet accessible via `-Dquarkus.profile=sonnet` for quality evaluation runs.
+The bigger build was engine: a native Quarkus service that ports the Python mining pipeline and adds an AI-driven harvest layer. I chose JLama as the default inference backend — in-process Java, auto-downloads from HuggingFace, no external daemon — backed by Qwen2.5-3B, with Sonnet accessible via `-Dquarkus.profile=sonnet` for quality evaluation runs.
 
 We built it in four phases under strict TDD, 171 tests total. Claude caught four production bugs during the red phase — the period when tests are supposed to fail and don't always fail for the reason you expect:
 
@@ -33,4 +33,4 @@ All four would have shipped without the discipline of watching each test fail co
 
 The fourth phase wires `DedupeClassifier` and `EntryMergeService` (both `@RegisterAiService` interfaces, backed by JLama in production) into a `SemanticDeduplicator` that classifies entry pairs as DISTINCT, RELATED, or DUPLICATE, and for duplicates, synthesises a merged entry rather than discarding the lower-scored one. This replaces the Jaccard-based scanner.
 
-One thing that didn't fully land: consuming the langchain4j fork directly. The fork targets Quarkus 3.15.2; garden-engine runs on 3.33.1. API enforcement around `@BuildStep` runtime config tightened between those versions and multiple processors fail the check. The workaround — forcing JOS serialisation via `.mvn/maven.config` — is in and all 171 tests pass. Upgrading the fork's Quarkus target is the next step before the workaround can come out.
+One thing that didn't fully land: consuming the langchain4j fork directly. The fork targets Quarkus 3.15.2; engine runs on 3.33.1. API enforcement around `@BuildStep` runtime config tightened between those versions and multiple processors fail the check. The workaround — forcing JOS serialisation via `.mvn/maven.config` — is in and all 171 tests pass. Upgrading the fork's Quarkus target is the next step before the workaround can come out.

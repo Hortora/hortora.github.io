@@ -20,8 +20,8 @@ The module boundary held cleanly: `inference-*` is shared with Hortora,
 mode — no RAG pipeline coupling. That separation was the right call; Hortora's
 retrieval stack and casehub's are completely different runtime environments.
 
-Phase 2 in garden-engine is now straightforward: hybrid dense+sparse search
+Phase 2 in engine is now straightforward: hybrid dense+sparse search
 via Qdrant named vector spaces, RRF fusion, optional cross-encoder reranking
 for the top-N precision pass. The infrastructure question is answered. What
-remains is the design of how garden-engine integrates those primitives into
+remains is the design of how engine integrates those primitives into
 its retrieval layer.
