@@ -2,7 +2,7 @@
 layout: post
 title: "The Garden Debt and a Java Engine"
 date: 2026-05-04
-entry: "14"
+entry: "29"
 type: phase-update
 entry_type: note
 subtype: diary

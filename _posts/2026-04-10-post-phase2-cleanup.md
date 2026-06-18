@@ -2,7 +2,7 @@
 layout: post
 title: "Post-Phase-2: Three things that needed fixing"
 date: 2026-04-10
-entry: "04"
+entry: "16"
 type: phase-update
 excerpt: "Phase 2 shipped. The CI pipeline validates submissions, integrates on merge, and the garden is at 169 entries."
 ---

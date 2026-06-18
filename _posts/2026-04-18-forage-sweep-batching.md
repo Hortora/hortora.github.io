@@ -2,7 +2,7 @@
 layout: post
 title: "Batching the Sweep"
 date: 2026-04-18
-entry: "09"
+entry: "25"
 type: session
 excerpt: "Forage SWEEP was opening one PR per entry — six to eight PRs for a typical session sweep. We fixed it."
 ---

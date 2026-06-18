@@ -2,7 +2,7 @@
 layout: post
 title: "Hortora — Designing the Engine"
 date: 2026-04-09
-entry: "03"
+entry: "14"
 type: phase-update
 excerpt: "Phase 2 in the roadmap was clear enough. The interesting part was working out the architecture."
 ---

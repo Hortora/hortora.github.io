@@ -2,7 +2,7 @@
 layout: post
 title: "Protocol Layer and Coherence"
 date: 2026-05-12
-entry: "17"
+entry: "32"
 type: phase-update
 entry_type: note
 subtype: diary

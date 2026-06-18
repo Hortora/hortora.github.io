@@ -2,7 +2,7 @@
 layout: post
 title: "Five layers"
 date: 2026-04-14
-entry: "06"
+entry: "19"
 type: phase-update
 excerpt: "The staleness problem had six candidate solutions, none quite right alone. We combined them into five. The garden now knows when to doubt itself."
 ---

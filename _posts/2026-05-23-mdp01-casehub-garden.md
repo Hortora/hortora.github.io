@@ -6,7 +6,7 @@ type: phase-update
 entry_type: note
 subtype: log
 projects: [hortora, casehub]
-entry: "22"
+entry: "39"
 excerpt: "A broken protocol ref turned into a design problem. The protocol store needed its own repo."
 ---
 

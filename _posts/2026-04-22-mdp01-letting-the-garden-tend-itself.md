@@ -2,7 +2,7 @@
 layout: post
 title: "Letting the Garden Tend Itself"
 date: 2026-04-22
-entry: "13"
+entry: "28"
 type: phase-update
 entry_type: note
 subtype: diary

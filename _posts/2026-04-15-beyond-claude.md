@@ -2,7 +2,7 @@
 layout: post
 title: "Beyond Claude"
 date: 2026-04-15
-entry: "08"
+entry: "23"
 type: phase-update
 excerpt: "The MCP server is the moment the garden stops being a Claude Code feature and becomes something any AI tool can use. Then we looked at the foundations and didn't like what we saw."
 ---

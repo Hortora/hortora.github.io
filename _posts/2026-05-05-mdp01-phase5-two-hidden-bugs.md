@@ -2,7 +2,7 @@
 layout: post
 title: "Phase 5 Done — and Two Bugs That Hid"
 date: 2026-05-05
-entry: "15"
+entry: "30"
 type: phase-update
 entry_type: note
 subtype: diary

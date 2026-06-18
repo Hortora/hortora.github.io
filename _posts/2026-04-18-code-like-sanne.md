@@ -2,7 +2,7 @@
 layout: post
 title: "Code Like Sanne"
 date: 2026-04-18
-entry: "10"
+entry: "24"
 type: phase-update
 excerpt: "The taxonomy design went further than expected. Six gardens, developer profiles, 'code like Sanne Grinovero' as a retrieval mode — then we built Phase 1 with 722 tests green."
 ---

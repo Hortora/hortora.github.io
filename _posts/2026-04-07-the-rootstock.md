@@ -2,7 +2,7 @@
 layout: post
 title: "The Rootstock: How the Hortora Garden was Germinated"
 date: 2026-04-07
-entry: "01"
+entry: "11"
 type: origin
 excerpt: "I kept losing hours. Not to bad code or wrong decisions — to rediscovery."
 ---

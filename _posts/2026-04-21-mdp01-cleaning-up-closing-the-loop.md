@@ -2,7 +2,7 @@
 layout: post
 title: "Cleaning Up, Closing the Loop"
 date: 2026-04-21
-entry: "12"
+entry: "27"
 type: phase-update
 excerpt: "One PR that wouldn't merge, a garden repo with 30 uncommitted commits, and then two phases that closed the pattern discovery loop."
 ---

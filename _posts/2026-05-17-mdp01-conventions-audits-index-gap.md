@@ -2,7 +2,7 @@
 layout: post
 title: "Conventions, Audits, and an Embarrassing Gap"
 date: 2026-05-17
-entry: "19"
+entry: "34"
 type: phase-update
 entry_type: note
 subtype: diary

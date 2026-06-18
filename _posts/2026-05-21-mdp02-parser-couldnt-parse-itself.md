@@ -6,7 +6,7 @@ type: phase-update
 entry_type: note
 subtype: diary
 projects: [hortora]
-entry: "21"
+entry: "38"
 excerpt: "The garden backfill wasn't 500 unindexed entries — it was 80 GARDEN.md gaps, one broken YAML parser, and a self-defeating gotcha entry."
 ---
 

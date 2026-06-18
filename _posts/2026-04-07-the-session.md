@@ -2,7 +2,7 @@
 layout: post
 title: "The Session: One Fix, One Afternoon, One Project"
 date: 2026-04-07
-entry: "02"
+entry: "12"
 type: session
 excerpt: "I came in to fix retrieval. We fixed it in an hour. Then we didn't stop."
 ---

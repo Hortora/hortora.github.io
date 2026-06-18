@@ -2,6 +2,7 @@
 layout: post
 title: "Nits and a Design Call"
 date: 2026-05-21
+entry: "36"
 type: phase-update
 entry_type: note
 subtype: diary

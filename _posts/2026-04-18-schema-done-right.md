@@ -2,7 +2,7 @@
 layout: post
 title: "Schema, Done Right"
 date: 2026-04-18
-entry: "11"
+entry: "26"
 type: phase-update
 excerpt: "Phase 2 was the patterns-garden extended entry format — six optional fields, 747 tests, one design decision worth explaining."
 ---

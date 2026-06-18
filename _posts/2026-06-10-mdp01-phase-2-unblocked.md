@@ -2,6 +2,7 @@
 layout: post
 title: "Phase 2 Unblocked"
 date: 2026-06-10
+entry: "41"
 type: phase-update
 entry_type: note
 subtype: diary

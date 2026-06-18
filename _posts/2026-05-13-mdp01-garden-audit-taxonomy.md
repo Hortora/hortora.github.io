@@ -2,7 +2,7 @@
 layout: post
 title: "Three Kinds of Knowledge"
 date: 2026-05-13
-entry: "18"
+entry: "33"
 type: phase-update
 entry_type: note
 subtype: diary

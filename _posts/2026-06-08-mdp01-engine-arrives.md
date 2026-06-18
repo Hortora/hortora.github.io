@@ -2,6 +2,7 @@
 layout: post
 title: "The retrieval engine takes shape"
 date: 2026-06-08
+entry: "40"
 type: phase-update
 entry_type: note
 subtype: diary

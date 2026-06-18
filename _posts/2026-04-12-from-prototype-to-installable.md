@@ -2,7 +2,7 @@
 layout: post
 title: "From prototype to installable"
 date: 2026-04-12
-entry: "05"
+entry: "17"
 type: phase-update
 excerpt: "Four docs pages. One install command. The garden skill is gone. Hortora is now something a stranger could actually use."
 ---

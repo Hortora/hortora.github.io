@@ -2,7 +2,7 @@
 layout: post
 title: "Hortora as a Knowledge Methodology"
 date: 2026-05-07
-entry: "16"
+entry: "31"
 type: phase-update
 entry_type: note
 subtype: diary
