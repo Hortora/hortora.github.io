@@ -2,12 +2,11 @@
 layout: post
 title: "cc-praxis — The Methodology Family"
 date: 2026-04-04
-entry: "05"
-type: phase-update
 entry_type: note
 subtype: diary
-projects: ["cc-praxis"]
+projects: [Hortora/soredium]
 ---
+
 # cc-praxis — The Methodology Family
 
 **Date:** 2026-04-04

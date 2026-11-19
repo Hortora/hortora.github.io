@@ -2,12 +2,11 @@
 layout: post
 title: "cc-praxis — The Retrospective Runs on Itself"
 date: 2026-04-07
-entry: "09"
-type: phase-update
 entry_type: note
 subtype: diary
-projects: ["cc-praxis"]
+projects: [Hortora/soredium]
 ---
+
 # cc-praxis — The Retrospective Runs on Itself
 
 **Date:** 2026-04-07

@@ -2,12 +2,11 @@
 layout: post
 title: "cc-praxis — Health, TypeScript, and Python"
 date: 2026-04-02
-entry: "03"
-type: phase-update
 entry_type: note
 subtype: diary
-projects: ["cc-praxis"]
+projects: [Hortora/soredium]
 ---
+
 # cc-praxis — Health, TypeScript, and Python
 
 **Date:** 2026-04-02

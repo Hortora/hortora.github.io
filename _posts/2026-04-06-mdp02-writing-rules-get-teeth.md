@@ -2,12 +2,11 @@
 layout: post
 title: "cc-praxis — The Writing Rules Get Teeth"
 date: 2026-04-06
-entry: "07"
-type: phase-update
 entry_type: note
 subtype: diary
-projects: ["cc-praxis"]
+projects: [Hortora/soredium]
 ---
+
 # cc-praxis — The Writing Rules Get Teeth
 
 **Date:** 2026-04-06

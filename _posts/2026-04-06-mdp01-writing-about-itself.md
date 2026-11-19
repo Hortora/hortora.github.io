@@ -2,12 +2,11 @@
 layout: post
 title: "cc-praxis — Teaching the Skills to Write About Themselves"
 date: 2026-04-06
-entry: "06"
-type: phase-update
 entry_type: note
 subtype: diary
-projects: ["cc-praxis"]
+projects: [Hortora/soredium]
 ---
+
 # cc-praxis — Teaching the Skills to Write About Themselves
 
 **Date:** 2026-04-06
